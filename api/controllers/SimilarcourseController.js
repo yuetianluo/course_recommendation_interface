@@ -6,8 +6,7 @@
  */
 
 module.exports = {
-     display:function{
-     	res.view
-     }	
+     display:function(req,res){
+     },	
 };
 
