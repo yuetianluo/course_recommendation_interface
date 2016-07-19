@@ -1,0 +1,65 @@
+<div class="mini-banner auto">
+  <div class="container">
+    <h2>Contact</h2>
+    <% if (messages && messages['error'].length > 0) { %>
+      <div class="alert alert-danger">
+      <% messages['error'].forEach(function(message) { %>
+        <%= message %>
+        <br>
+      <% }); %>
+      </div>
+      <br>
+    <% } %>
+    <% if (messages && messages['warning'].length > 0) { %>
+      <div class="alert alert-warning">
+      <% messages['warning'].forEach(function(message) { %>
+        <%= message %>
+        <br>
+      <% }); %>
+      </div>
+      <br>
+    <% } %>
+    <% if (messages && messages['success'].length > 0) { %>
+      <div class="alert alert-success">
+      <% messages['success'].forEach(function(message) { %>
+        <%= message %>
+        <br>
+      <% }); %>
+      </div>
+      <br>
+    <% } %> 
+  </div>
+</div>
+<div class="container wrapper">
+  <form action="/report/send" method="POST">
+    <p>If you have any questions/concerns, please contact us through this form below. We will try to respond within 2 business days.</p>
+    <div class="form-group">
+      <label>First Name: </label>
+      <input type="text" class="form-control" placeholder="first name" name="firstName">
+    </div>
+    <div class="form-group">
+      <label>Last Name: </label>
+      <input type="text" class="form-control" placeholder="last name" name="lastName">
+    </div>
+    <div class="form-group">
+      <label>Email Address: </label>
+      <input type="text" class="form-control" placeholder="email address" name="emailAddress">
+    </div>
+    <div class="form-group">
+      <label>Contact Reason:</label>
+      <br>
+      <label class="undecorated tab"><input type="radio" name="type" value="Bug"> Bug</label>
+      <label class="undecorated tab"><input type="radio" name="type" value="Suggestion"> Suggestion</label>
+      <label class="undecorated tab"><input type="radio" name="type" value="Inquiry"> Inquiry</label>
+      <label class="undecorated tab"><input type="radio" name="type" value="Media Relations"> Media Relations</label>
+      <label class="undecorated tab"><input type="radio" name="type" value="Other"> Other</label><br>
+    </div>
+
+    <div class="form-group">
+    <label>Message:</label>
+      <textarea name="emailMessage" class="form-control" rows="10"></textarea>
+    </div>
+    <input type="hidden" name="_csrf" value="<%= _csrf %>" />
+    <input type="submit" class="btn btn-sm btn-primary" value="Submit"/>
+  </form>
+</div>

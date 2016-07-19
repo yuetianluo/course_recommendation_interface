@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>mooocCR-<%-title%></title>
+
+    <!-- Viewport mobile tag for sensible mobile support -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" charset="utf-8">
+
+
+    <!--
+        Stylesheets and Preprocessors
+        ==============================
+
+        You can always bring in CSS files manually with `<link>` tags, or asynchronously
+        using a solution like AMD (RequireJS).  Or, if you like, you can take advantage
+        of Sails' conventional asset pipeline (boilerplate Gruntfile).
+
+        By default, stylesheets from your `assets/styles` folder are included
+        here automatically (between STYLES and STYLES END). Both CSS (.css) and LESS (.less)
+        are supported. In production, your styles will be minified and concatenated into
+        a single file.
+
+        To customize any part of the built-in behavior, just edit `tasks/pipeline.js`.
+        For example, here are a few things you could do:
+
+            + Change the order of your CSS files
+            + Import stylesheets from other directories
+            + Use a different or additional preprocessor, like SASS, SCSS or Stylus
+    -->
+
+    <!--STYLES-->
+    <link rel="stylesheet" href="/styles/bootstrap-glyphicons.css">
+    <link rel="stylesheet" href="/styles/bootstrap.css">
+    <link rel="stylesheet" href="/styles/custom.css">
+    <link rel="stylesheet" href="/styles/dataTables.bootstrap.css">
+    <link rel="stylesheet" href="/styles/importer.css">
+    <link rel="stylesheet" href="/styles/jquery.dataTables.css">
+    <link rel="stylesheet" href="/styles/jquery.dataTables_themeroller.css">
+    <!--STYLES END-->
+    
+    <!-- PRELOAD SCRIPTS -->
+    <script src="/js/dependencies/sails.io.js"></script>
+    <script src="/js/jquery-1.11.0.min.js"></script><!--!!!!in order to let the carousel-->
+
+    <!-- FONTS --> 
+    <link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+    <!-- FONTS END -->
+  </head>
+
+  <body id="top">
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/"><img src="/images/favicon.png" class='img-responsive'> moocCR</a>
+        </div>
+
+        <ul class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+          <% if (session.authenticated) { %>
+              <li><a id="Dashboard" class="navbar-button" href="/dashboard/display/<%=session.user.id%>">Dashboard</a></li>
+              <!--this is the way to write href in html!!!-->
+              <% if (session.user && session.user.admin) { %>
+              <li class="dropdown" id='Admin Panel'>
+                    <a class="navbar-button dropdown-toggle" id="admin-menu" data-toggle="dropdown"><!--it should be a button, but whether set it as a button or a navbar-button depends on you-->
+                      Admin Panel
+                      <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="admin-menu">
+                      <li role="presentation"><a role="menuitem" href="/admin/manage_users">User Management</a></li>
+                      <li role="presentation"><a role="menuitem" href="/admin/manage_analytics">Module Management</a></li>
+                      <li role="presentation" class="divider"></li><!--seperator is used to draw a line to divide them-->
+                      <li role="presentation"><a role="menuitem" href="/admin/manage_requests">Data Requests</a></li>
+                      <li role="presentation"><a role="menuitem" href="/admin/manage_data_models">Data Models</a></li>
+                      <li role="presentation"><a role="menuitem" href="/admin/manage_data_scripts">Data Scripts</a></li>
+                      <li role="presentation" class="divider"></li>
+                      <li role="presentation"><a role="menuitem" href="/report">Reports</a></li>
+                      <li role="presentation"><a role="menuitem" href="http://www.github.com" target="_blank">Updates</a></li>
+                      <li role="presentation" class="dropdown-header">Version 0.0.1</li>
+                    </ul>
+              </li>
+              <% } %>
+            <% } %>
+          </ul>
+
+
+          <ul class="nav navbar-nav navbar-right">
+            <% if (session.authenticated) { %>
+            <!-- Logout button -->
+              <li><p class="navbar-text">Logged in as <a href="/user/edit/<%= session.user.id %>"><font color="#5cb85c"><%= session.user.firstName %> <%= session.user.lastName %></font></a></p></li>
+              <li><a class="btn btn-default btn-sm navbar-btn" href="/" onclick="window.open('/logout')">Logout</a></li>
+            <% } %>
+
+            <!-- Login button -->
+            <% if (!session.authenticated) { %>
+              <li><a class="btn btn-default btn-sm navbar-btn" href="/signin">Login</a></li>
+              <li><a class="btn btn-default btn-sm navbar-btn" href="/signup">Sign up</a></li>
+            <% } %>
+            <!-- end section -->
+          </ul>
+          
+        </ul>
+    </div>
+  </nav>
+
+
+    <%- body %>
+
+
+
+    <!--
+        Client-side Templates
+        ========================
+
+        HTML templates are important prerequisites of modern, rich client applications.
+        To work their magic, frameworks like Backbone, Angular, Ember, and Knockout require
+        that you load these templates client-side.
+
+        By default, your Gruntfile is configured to automatically load and precompile
+        client-side JST templates in your `assets/templates` folder, then
+        include them here automatically (between TEMPLATES and TEMPLATES END).
+
+        To customize this behavior to fit your needs, just edit `tasks/pipeline.js`.
+        For example, here are a few things you could do:
+
+            + Import templates from other directories
+            + Use a different template engine (handlebars, jade, dust, etc.)
+            + Internationalize your client-side templates using a server-side
+              stringfile before they're served.
+    -->
+
+    <!--TEMPLATES-->
+    
+    <!--TEMPLATES END-->
+
+    <!-- Footer -->
+    <div class="container">
+      <hr>
+      <footer class="footer">
+        <div class="pull-left">
+          <p>Find a bug? Report it <a href="/contact">here</a>!</p>
+        </div>
+        <div class="pull-right">
+          <div><a href="/license">MIT License</a> - <a href="/tos">Terms of Use</a> - <a href="/privacy">Privacy Policy</a> - <a href="/contact">Contact</a></div>
+        </div>
+        <br>
+        <div class="pull-right">
+          <div>&copy; 2016 moocCR. Built on <a href="http://sailsjs.com/">Sails.js</a></div>
+        </div>
+      </footer>
+    </div>
+    <!--
+
+      Client-side Javascript
+      ========================
+
+      You can always bring in JS files manually with `script` tags, or asynchronously
+      on the client using a solution like AMD (RequireJS).  Or, if you like, you can
+      take advantage of Sails' conventional asset pipeline (boilerplate Gruntfile).
+
+      By default, files in your `assets/js` folder are included here
+      automatically (between SCRIPTS and SCRIPTS END).  Both JavaScript (.js) and
+      CoffeeScript (.coffee) are supported. In production, your scripts will be minified
+      and concatenated into a single file.
+
+      To customize any part of the built-in behavior, just edit `tasks/pipeline.js`.
+      For example, here are a few things you could do:
+
+          + Change the order of your scripts
+          + Import scripts from other directories
+          + Use a different preprocessor, like TypeScript
+
+    -->
+
+    <!--SCRIPTS-->
+    <script src="/js/dependencies/sails.io.js"></script>
+    <script src="/js/app.js"></script>
+    <script src="/js/bootstrap.js"></script>
+    <script src="/js/dataTables.bootstrap.js"></script>
+    <script src="/js/ejs/ejs_production.js"></script>
+    <script src="/js/ejs/view.js"></script>
+    <script src="/js/jquery-1.11.0.min.js"></script>
+    <script src="/js/jquery.dataTables.js"></script>
+    <script src="/js/sails.io.js"></script>
+    <script src="/js/socket.io.js"></script>
+    <!--SCRIPTS END-->
+  </body>
+</html>
