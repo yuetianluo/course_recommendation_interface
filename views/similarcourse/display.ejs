@@ -1,0 +1,103 @@
+<div class="mini-banner auto">
+	<div class="container">
+		<h2>Analysis one</h2>
+	</div>
+</div>
+
+<div class="sub-banner">
+  <div class="container">
+    <h2>Find courses you want to take!</h2>
+  </div>
+</div>
+
+<div class="container wrapper">
+<div class="row">
+<h3>Please choose course</h3>
+	<div class="col-md-6">
+		<h4>Please choose the department offer the course</h4>
+		<select class="department-list" id="departmentlist">
+		<option value="NULL">Not specified</option>
+    	<option value="Stat">Statistics</option>
+		<option value="CS">Computer science</option>
+		</select>
+	</div>
+	<div class="col-md-4">
+		<h4>Please search for your course</h4>
+		<form method="POST" action="/similarcourse/search">
+		<select class="course-list">
+			<option value="NULL">Not specified</option>
+        <option value="Stat">Statistics</option>
+			<option value="CS">Computer science</option>
+		</select>
+		<input type="submit" class="btn btn-sm btn-success" value="Submit">
+    	<input type="hidden" name="_csrf" value="<%= _csrf %>" />
+		</form>
+	</div>
+	
+  
+
+</div>
+  
+				
+	
+</div>
+
+
+
+<script type="text/javascript">
+                $(document).ready(function() {
+  $(".js-data-example-ajax").select2({
+  ajax: {
+    url: "https://api.github.com/search/repositories",
+    dataType: 'json',
+    delay: 250,
+    data: function (params) {
+      return {
+        q: params.term, // search term
+        page: params.page
+      };
+    },
+    processResults: function (data, params) {
+      // parse the results into the format expected by Select2
+      // since we are using custom formatting functions we do not need to
+      // alter the remote JSON data, except to indicate that infinite
+      // scrolling can be used
+      params.page = params.page || 1;
+
+      return {
+        results: data.items,
+        pagination: {
+          more: (params.page * 30) < data.total_count
+        }
+      };
+    },
+    cache: true
+  },
+  escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+  minimumInputLength: 1,
+  templateResult: formatRepo, // omitted for brevity, see the source of this page
+  templateSelection: formatRepoSelection // omitted for brevity, see the source of this page
+});
+});
+</script>
+
+
+<script type="text/javascript">
+                $(document).ready(function() {
+  $(".department-list").select2();
+});
+</script>
+
+
+
+
+<script type="text/javascript">
+	$(document).ready(function{
+    $("#departmentlist").change(function() {
+        var deskid = $("#desk :option").attr('id');
+        $.ajax ({
+            url: mypagephp?dataid=deskid // [acomma seperated values of the all above chosen desks]
+        });
+    });
+});
+</script>

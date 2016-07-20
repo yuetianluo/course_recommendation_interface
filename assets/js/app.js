@@ -11,15 +11,15 @@
 (function (io) {
 
   // as soon as this file is loaded, connect automatically, 
-  var socket = io.connect();
+  var socket = io.connect();////!!!!connect to the socket server
   if (typeof console !== 'undefined') {
     log('Connecting to Sails.js...');
   }
 
-  socket.on('connect', function socketConnected() {
+  socket.on('connect', function socketConnected() {// listen when the socket actually conncect
 
     // Listen for Comet messages from Sails
-    socket.on('message', function messageReceived(message) {
+    socket.on('message', function messageReceived(message) {///!!!!!socket start to listen to the message event from the server
 
       ///////////////////////////////////////////////////////////
       // Replace the following with your own custom logic

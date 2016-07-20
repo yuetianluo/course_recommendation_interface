@@ -24,15 +24,21 @@ module.exports = {
     if (req.session.lastPage != 'signup') {
       return res.redirect('500');
     } else {
-      var params = req.params.all();
+      //var params = req.params.all();//!!!it is not safe in this way
      // sails.log.debug(req.session.uid);
-
+        var userObj={
+          firstName:req.param('firstName'),
+          lastName:req.param('lastName'),
+          email:req.param('email'),
+          password:req.param('password'),
+          comfirmation:req.param('comfirmation')
+        };
     //  params['registered'] = true;
-      User.findOneByEmail({email:params.email},function(err,user){
+      User.findOneByEmail({email:userObj.email},function(err,user){
       	if(user){
       		FlashService.error(req,"Your email has been registered")
       	}else{
-      		User.create(params, function userCreated(err, user) {
+      		User.create(userObj, function userCreated(err, user) {
         if (err) {
           sails.log.debug('Error occurred: ' + err);
           FlashService.error(req, "Please fill in all fields and make sure your email address is correct");

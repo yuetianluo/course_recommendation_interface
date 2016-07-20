@@ -33,7 +33,7 @@ module.exports.policies = {
   },
 
   DashboardController: {
-    '*': ['flash', 'isAuthenticated', 'getOnly']
+    '*': ['flash', 'isAuthenticated', 'getOnly']//
   },
 
   HomeController: {
@@ -42,9 +42,9 @@ module.exports.policies = {
 
   UserController: {
     '*': ['flash'],
-    'show': ['isAdmin', 'flash', 'hasID'],
-    'switch': ['isAdmin', 'flash', 'hasID'],
-    'edit': ['flash', 'hasID'],
+    'show': ['flash', 'hasID','isAuthenticated'],
+    'switch': ['isAdmin','flash', 'hasID'],
+    'edit': ['flash', 'hasID','isAuthenticated'],
     'destroy': ['isAdmin', 'flash', 'hasID'],
     'update': ['isAuthenticated', 'flash', 'hasID'],
     'signin':['flash']
