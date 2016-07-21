@@ -48,7 +48,10 @@ module.exports.policies = {
     'destroy': ['isAdmin', 'flash', 'hasID'],
     'update': ['isAuthenticated', 'flash', 'hasID'],
     'signin':['flash']
-  }
+  },
+  DepartmentController:[true,'flash'],
+  CourseController:[true,'flash'],
+
   
 
   /***************************************************************************

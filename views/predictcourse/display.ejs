@@ -1,0 +1,84 @@
+<div class="mini-banner auto">
+	<div class="container">
+		<h2>Analysis three</h2>
+	</div>
+</div>
+
+<div class="sub-banner">
+  <div class="container">
+    <h2>Get your dream score under our guidance!</h2>
+  </div>
+</div>
+
+<div class="container wrapper">
+<div class="row">
+<h3>Please choose course</h3>
+	<div class="col-md-4">
+		<h4>Choose the department offer the course</h4>
+		<select class="department-list form-control" id="departmentlist" style="width:300px">
+		<option></option>
+		<option value="NULL">Not specified</option>
+    	<option value="Stat">Statistics</option>
+		<option value="CS">Computer science</option>
+		</select>
+	</div>
+	<form method="POST" action="/predictcourse/search" >
+	<div class="col-md-4">
+		<h4>Please search for your course</h4>
+		
+		<select class="course-list" id="course-list" style="width:200px">
+		<option></option>
+        <option value="Stat">Statistics</option>
+			<option value="CS">Computer science</option>
+		</select>
+	</div>
+	<div class="col-md-4">
+		<h4>Please choose your dream score!</h4>
+		<select class="grade-list"  style="width:100px">
+		<option value="A">A</option>
+        <option value="B">B</option>
+		<option value="C">C</option>
+		<option value="pass">Pass</option>
+		</select>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" class="btn btn-sm btn-success" value="Submit">
+    	<input type="hidden" name="_csrf" value="<%= _csrf %>" />
+		
+	</div>
+	</form>
+</div>	
+</div>
+
+<script type="text/javascript">
+                $(document).ready(function() {
+  $(".course-list").select2({
+  	placeholder:'Select an option'
+  
+});
+});
+</script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+  $(".department-list").select2({
+  	placeholder:'Select an option'
+  });
+});
+</script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+  $(".grade-list").select2();
+});
+</script>
+
+
+<script type="text/javascript">
+	$(document).ready(function{
+    $("#departmentlist").change(function() {
+        var deskid = $("#desk :option").attr('id');
+        $.ajax ({
+            url: mypagephp?dataid=deskid // [acomma seperated values of the all above chosen desks]
+        });
+    });
+});
+</script>

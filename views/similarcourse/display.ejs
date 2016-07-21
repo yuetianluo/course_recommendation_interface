@@ -6,48 +6,44 @@
 
 <div class="sub-banner">
   <div class="container">
-    <h2>Find courses you want to take!</h2>
+    <h2>Find similar courses you want to take!</h2>
   </div>
 </div>
 
 <div class="container wrapper">
 <div class="row">
 <h3>Please choose course</h3>
-	<div class="col-md-6">
+	<div class="col-md-5">
 		<h4>Please choose the department offer the course</h4>
-		<select class="department-list" id="departmentlist">
+		<select class="department-list form-control" id="departmentlist" >
+		<option></option>
 		<option value="NULL">Not specified</option>
     	<option value="Stat">Statistics</option>
 		<option value="CS">Computer science</option>
 		</select>
 	</div>
-	<div class="col-md-4">
+	<div class="col-md-6">
 		<h4>Please search for your course</h4>
-		<form method="POST" action="/similarcourse/search">
-		<select class="course-list">
-			<option value="NULL">Not specified</option>
+		<form method="POST" action="/similarcourse/search" >
+		<select class="course-list" id="course-list" style="width:300px">
+		<option></option>
         <option value="Stat">Statistics</option>
 			<option value="CS">Computer science</option>
 		</select>
-		<input type="submit" class="btn btn-sm btn-success" value="Submit">
+		&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" class="btn btn-sm btn-success" value="Submit">
     	<input type="hidden" name="_csrf" value="<%= _csrf %>" />
 		</form>
 	</div>
-	
-  
-
-</div>
-  
-				
-	
+</div>	
 </div>
 
 
 
 <script type="text/javascript">
                 $(document).ready(function() {
-  $(".js-data-example-ajax").select2({
-  ajax: {
+  $(".course-list").select2({
+  	placeholder:'Select an option'
+  /*ajax: {
     url: "https://api.github.com/search/repositories",
     dataType: 'json',
     delay: 250,
@@ -76,15 +72,17 @@
   escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
   minimumInputLength: 1,
   templateResult: formatRepo, // omitted for brevity, see the source of this page
-  templateSelection: formatRepoSelection // omitted for brevity, see the source of this page
+  templateSelection: formatRepoSelection // omitted for brevity, see the source of this page*/
 });
 });
 </script>
 
 
 <script type="text/javascript">
-                $(document).ready(function() {
-  $(".department-list").select2();
+  $(document).ready(function() {
+  $(".department-list").select2({
+  	placeholder:'Select an option'
+  });
 });
 </script>
 

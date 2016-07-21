@@ -1,0 +1,38 @@
+<div class="mini-banner auto">
+	<div class="container">
+		<h2>Analysis two</h2>
+	</div>
+</div>
+
+<div class="sub-banner">
+  <div class="container">
+    <h2>Find courses which are most suitable for you to take next!</h2>
+  </div>
+</div>
+
+<div class="container wrapper">
+<div class="row">
+	<div class="col-md-8">
+		<h4>If you want to specify the dapartment offer the course, please choose here</h4>
+		<form method="POST" action="/nextcourse/search" >
+		<select class="department-list form-control" id="departmentlist" style="width:300px">
+		<option></option>
+		<option value="NULL">Not specified</option>
+    	<option value="Stat">Statistics</option>
+		<option value="CS">Computer science</option>
+		</select>
+		<br><br><input type="submit" class="btn btn-sm btn-success" value="Please click here to find suitable courses for you!">
+		</form>
+	</div>
+	
+</div>	
+</div>
+
+
+<script type="text/javascript">
+  $(document).ready(function() {
+  $(".department-list").select2({
+  	placeholder:'Select an option'
+  });
+});
+</script>

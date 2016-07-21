@@ -1,0 +1,67 @@
+<div class="mini-banner auto">
+	<div class="container">
+		<h2>Add new course</h2>
+	</div>
+</div>
+
+<div class="sub-banner">
+	<div class="container">
+		<h2 class="form-signin-heading">you can add new course here</h2>
+
+    <% if (messages && messages['error'].length > 0) { %>
+      <div class="alert alert-danger">
+      <% messages['error'].forEach(function(message) { %>
+        <%= message %>
+        <br>
+      <% }); %>
+      </div>
+      <br>
+    <% } %>
+    <% if (messages && messages['warning'].length > 0) { %>
+      <div class="alert alert-warning">
+      <% messages['warning'].forEach(function(message) { %>
+        <%= message %>
+        <br>
+      <% }); %>
+      </div>
+      <br>
+    <% } %>
+	</div>
+</div>
+
+<div class="container">
+	<form action="/course/create" method="POST" class="form-signin">
+		Please enter the information of the new course
+    <br>
+    <br><br>
+		<label>Course Name: </label><input type="text" class="form-control" placeholder="course name" name="courseName" tabindex="1">
+		<label>Teacher's Name: </label><input type="text" class="form-control" placeholder="teacher's name" name="teacherName" tabindex="1">
+		<label>Credit: </label><input type="text" class="form-control" placeholder="credit" name="credit" tabindex="1">
+		<select name="departmentid" class="department-list form-control" id="departmentlist" style="width:500px">
+    <option></option>
+      <% _.each(departments, function(department) { %>
+      <option value="<%=department.id%>"><%=department.departmentName%></option>
+      <%})%>
+    </select>
+    <!--<label>GPG Public Key ID: </label> <div class="pull-right"><a href="#GPGModal" data-toggle="modal" tabindex="2">(?)</a></div>
+		<input type="text" class="form-control" placeholder="64CD7S" name="publicKeyID" tabindex="1">
+		<label>GPG Public Key:</label> <div class="pull-right"><a href="#GPGModal" data-toggle="modal" tabindex="2">(?)</a></div>
+		<br>
+		<textarea class="form-control" placeholder="copy your public key here. please include the BEGIN header and the END header." name="publicKey" tabindex="1"></textarea>
+		-->
+    <br>
+    <br>
+		<input type="submit" class="btn btn-lg btn-primary btn-block" value="Create" tabindex="1">
+		<input type="hidden" name="_csrf" value="<%= _csrf %>" />
+	</form>
+</div>
+
+
+
+<script type="text/javascript">
+  $(document).ready(function() {
+  $(".department-list").select2({
+    placeholder:'Please choose for a department for the course'
+  });
+});
+</script>

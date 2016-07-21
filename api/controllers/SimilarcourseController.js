@@ -11,20 +11,18 @@ module.exports = {
      },	
      search:function(req,res){
      	var PythonShell = require('python-shell');
-
 			var options = {
 			  mode: 'text',
-			  pythonPath: 'path/to/python',
-			  pythonOptions: ['-u'],
-			  scriptPath: 'path/to/my/scripts',
-			  args: ['value1', 'value2', 'value3']
+			 // scriptPath: '/Users/luoyuetian/Desktop/junior/summerproject/course_recommendation_interface',
+			 // the default route is the course_recommendation_interface
+			  args: ['value1']
 			};
 
-			PythonShell.run('my_script.py', options, function (err, results) {
+			PythonShell.run('sum_test.py', options, function (err, results) {
 			  if (err) throw err;
 			  // results is an array consisting of messages collected during execution
-			  console.log('results: %j', results);
+			  console.log('results: %s', results[0]);// be careful here it should be '%s', it doesn't show any thing if I use -%j'
 			});
-			     }
+		},
 };
 
