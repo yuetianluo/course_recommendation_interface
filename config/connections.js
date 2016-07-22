@@ -64,7 +64,15 @@ module.exports.connections = {
   //   password: 'password', //optional
   //   database: 'your_mongo_db_name_here' //optional
   // },
-
+    mongo:{
+      adapter:'sails-mongo',
+      //host:'localhost',
+      //user:'',
+      //password:'',
+      //database:'moocCR',
+      url:process.env.DB_URL,
+      schema:true
+    }
   /***************************************************************************
   *                                                                          *
   * PostgreSQL is another officially supported relational database.          *
