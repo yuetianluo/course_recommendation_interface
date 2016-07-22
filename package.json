@@ -28,7 +28,7 @@
   },
   "scripts": {
     "debug": "node debug app.js",
-    "start": "node app.js"
+    "start": "sails lift"
   },
   "main": "app.js",
   "repository": {
@@ -36,6 +36,6 @@
     "url": "git://github.com/luoyuetian/courseRD.git"
   },
   "author": "luoyuetian",
-  "license": "",
-  "start":"node app.js"
+  "license": ""
+  
 }
