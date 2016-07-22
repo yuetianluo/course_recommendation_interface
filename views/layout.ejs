@@ -64,9 +64,20 @@
 
         <ul class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-          <% if (session.authenticated) { %>
+          <% if (session.authenticated) { %><!---->
               <li><a id="Dashboard" class="navbar-button" href="/dashboard/display/<%=session.user.id%>">Dashboard</a></li>
               <!--this is the way to write href in html!!!-->
+              <li id="Recommendation" class="dropdown" > 
+                  <a class="navbar-button dropdown-toggle" id="recommendation-menu" data-toggle="dropdown"><!--it should be a button, but whether set it as a button or a navbar-button depends on you-->
+                      Recommendation
+                      <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="recommendation-menu">
+                      <li role="presentation"><a role="menuitem" href="/similarcourse/display/<%=session.user.id%>">Find similar courses</a></li>
+                      <li role="presentation"><a role="menuitem" href="/nextcourse/display/<%=session.user.id%>">Find course suits you</a></li>
+                      <li role="presentation"><a role="menuitem" href="/predictcourse/display/<%=session.user.id%>">Analysis 3</a></li>
+                    </ul>
+              </li>
               <% if (session.user && session.user.admin) { %>
               <li class="dropdown" id='Admin Panel'>
                     <a class="navbar-button dropdown-toggle" id="admin-menu" data-toggle="dropdown"><!--it should be a button, but whether set it as a button or a navbar-button depends on you-->
@@ -75,14 +86,11 @@
                     </a>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="admin-menu">
                       <li role="presentation"><a role="menuitem" href="/admin/manage_users">User Management</a></li>
-                      <li role="presentation"><a role="menuitem" href="/admin/manage_analytics">Module Management</a></li>
+                      <li role="presentation"><a role="menuitem" href="/admin/manage_courses">Course Management</a></li>
                       <li role="presentation" class="divider"></li><!--seperator is used to draw a line to divide them-->
-                      <li role="presentation"><a role="menuitem" href="/admin/manage_requests">Data Requests</a></li>
-                      <li role="presentation"><a role="menuitem" href="/admin/manage_data_models">Data Models</a></li>
-                      <li role="presentation"><a role="menuitem" href="/admin/manage_data_scripts">Data Scripts</a></li>
+                      <li role="presentation"><a role="menuitem" href="/admin/manage_departments">Department Management</a></li>
                       <li role="presentation" class="divider"></li>
                       <li role="presentation"><a role="menuitem" href="/report">Reports</a></li>
-                      <li role="presentation"><a role="menuitem" href="http://www.github.com" target="_blank">Updates</a></li>
                       <li role="presentation" class="dropdown-header">Version 0.0.1</li>
                     </ul>
               </li>
@@ -103,6 +111,7 @@
               <li><a class="btn btn-default btn-sm navbar-btn" href="/signin">Login</a></li>
               <li><a class="btn btn-default btn-sm navbar-btn" href="/signup">Sign up</a></li>
             <% } %>
+            <li><a class="btn btn-default btn-sm navbar-btn" href="/">Homepage</a></li>
             <!-- end section -->
           </ul>
           

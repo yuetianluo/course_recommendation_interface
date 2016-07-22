@@ -6,22 +6,25 @@
 
 <div class="sub-banner">
   <div class="container">
-    <h2>Find courses which are most suitable for you to take next!</h2>
+    <h2>Find courses which are most suitable for you to take!</h2>
+    <h4>
+    	Don's know what course are suitalbe for you to take next, also don't have wise guidance on the course plan. Don't worry! You can find the most suitable courses for you to take here! We will give best recommendations to you based on your history.
   </div>
 </div>
 
 <div class="container wrapper">
 <div class="row">
-	<div class="col-md-8">
+	<div class="col-md-9">
 		<h4>If you want to specify the dapartment offer the course, please choose here</h4>
 		<form method="POST" action="/nextcourse/search" >
-		<select class="department-list form-control" id="departmentlist" style="width:300px">
-		<option></option>
-		<option value="NULL">Not specified</option>
-    	<option value="Stat">Statistics</option>
-		<option value="CS">Computer science</option>
+		<select name="department" class="department-list form-control" id="departmentlist" style="width:300px">
+			<option></option>
+			<option value="Not specified">Not specified</option>
+	        <% _.each(departments, function(department) { %>
+	        <option value="<%=department.id%>"><%=department.departmentName%></option>
+	        <%})%>
 		</select>
-		<br><br><input type="submit" class="btn btn-sm btn-success" value="Please click here to find suitable courses for you!">
+		<br><br><input type="submit" class="btn btn-lg btn-success" value="Please click here to find suitable courses for you!">
 		</form>
 	</div>
 	
@@ -32,7 +35,7 @@
 <script type="text/javascript">
   $(document).ready(function() {
   $(".department-list").select2({
-  	placeholder:'Select an option'
+  	placeholder:'Please specify a department if you like'
   });
 });
 </script>

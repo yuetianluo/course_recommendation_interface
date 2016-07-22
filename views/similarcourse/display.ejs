@@ -6,96 +6,77 @@
 
 <div class="sub-banner">
   <div class="container">
-    <h2>Find similar courses you want to take!</h2>
+    <h2>Find similar courses you want to take! </h2>
+    <h4>
+      Never worry about the courses you want to take are full, because we can find similar courses here! You can search for the courses and find all courses that are most similar to them
+    </h4>
   </div>
 </div>
 
 <div class="container wrapper">
 <div class="row">
 <h3>Please choose course</h3>
-	<div class="col-md-5">
-		<h4>Please choose the department offer the course</h4>
-		<select class="department-list form-control" id="departmentlist" >
-		<option></option>
-		<option value="NULL">Not specified</option>
-    	<option value="Stat">Statistics</option>
-		<option value="CS">Computer science</option>
-		</select>
-	</div>
 	<div class="col-md-6">
-		<h4>Please search for your course</h4>
-		<form method="POST" action="/similarcourse/search" >
-		<select class="course-list" id="course-list" style="width:300px">
-		<option></option>
-        <option value="Stat">Statistics</option>
-			<option value="CS">Computer science</option>
-		</select>
-		&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" class="btn btn-sm btn-success" value="Submit">
-    	<input type="hidden" name="_csrf" value="<%= _csrf %>" />
-		</form>
+    <select name="department" class="department-list form-control" id="departmentlist" style="width:300px">
+    <option></option>
+    <option value="Not specified">Not specified</option>
+      <% _.each(departments, function(department) { %>
+      <option value="<%=department.id%>"><%=department.departmentName%></option>
+      <%})%>
+    </select>
+
 	</div>
+  <form method="POST" action="/similarcourse/search" >
+	<div class="col-md-4">
+		
+		<select class="course-list form-control" id="courselist" name="courseName" style="width:300px">
+		<option></option>
+    <% _.each(courses, function(course) { %>
+      <option value="<%=course.department.id%>"><%=course.courseName%></option>
+      <%})%>
+		</select>
+      
+	</div>
+  <div class="col-md-2">
+
+    <input type="submit" class="btn btn-sm btn-success" value="Submit">
+      <input type="hidden" name="_csrf" value="<%= _csrf %>" />
+  </div>
+  </form>
 </div>	
 </div>
 
-
+<!---->
 
 <script type="text/javascript">
                 $(document).ready(function() {
-  $(".course-list").select2({
-  	placeholder:'Select an option'
-  /*ajax: {
-    url: "https://api.github.com/search/repositories",
-    dataType: 'json',
-    delay: 250,
-    data: function (params) {
-      return {
-        q: params.term, // search term
-        page: params.page
-      };
-    },
-    processResults: function (data, params) {
-      // parse the results into the format expected by Select2
-      // since we are using custom formatting functions we do not need to
-      // alter the remote JSON data, except to indicate that infinite
-      // scrolling can be used
-      params.page = params.page || 1;
-
-      return {
-        results: data.items,
-        pagination: {
-          more: (params.page * 30) < data.total_count
-        }
-      };
-    },
-    cache: true
-  },
-  escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
-  minimumInputLength: 1,
-  templateResult: formatRepo, // omitted for brevity, see the source of this page
-  templateSelection: formatRepoSelection // omitted for brevity, see the source of this page*/
-});
+  $("#courselist").select2({
+    placeholder:'Please choose a course'
+  })
 });
 </script>
 
 
-<script type="text/javascript">
+ <script type="text/javascript">
   $(document).ready(function() {
-  $(".department-list").select2({
-  	placeholder:'Select an option'
-  });
+  $("#departmentlist")
+   .select2({
+    placeholder:'Please choose a department'
+  }).on("change",function() {////////////////this is a way to add "change" event
+  if ($(this).val()=="Not specified"){
+  //if ($(this).data('options') == undefined) {////
+    /*Taking an array of all options-2 and kind of embedding it on the select1*/
+    $(this).data('options', $('#courselist option').clone());
+    var options = $(this).data('options')
+     $('#courselist').html(options);
+  }else{
+    $(this).data('options', $('#courselist option').clone());
+      var id = $(this).val();
+  var options = $(this).data('options').filter('[value=' + id + ']');
+  $('#courselist').html(options);
+}
+})
+
 });
-</script>
+</script>  
 
-
-
-
-<script type="text/javascript">
-	$(document).ready(function{
-    $("#departmentlist").change(function() {
-        var deskid = $("#desk :option").attr('id');
-        $.ajax ({
-            url: mypagephp?dataid=deskid // [acomma seperated values of the all above chosen desks]
-        });
-    });
-});
-</script>

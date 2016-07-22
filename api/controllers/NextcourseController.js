@@ -7,8 +7,11 @@
 
 module.exports = {
 	display:function(req,res){
-     	res.view();
-     },	
+     	Department.find(function(err,departments){
+     			if(err) FlashService.error(req, 'There is something wrong to display departments');
+                return res.view({title:'Find next courses',departments:departments});
+     		})
+     	},	
      search:function(req,res){
      	var PythonShell = require('python-shell');
 

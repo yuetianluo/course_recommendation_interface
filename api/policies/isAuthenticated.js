@@ -14,7 +14,7 @@ module.exports = function(req, res, next) {
 
     var ismyfile=(req.session.user.id===req.param('id'));
 	var isadmin=req.session.user.admin;
-	if(ismyfile || isadmin){ next();}else{
+	if(ismyfile || isadmin ){ next();}else{
 	var requireaccessError = 'You are not allowed to access';
 	req.session.messages = { error: [requireAdminError] };
 		return res.redirect('/signin');//I forget return

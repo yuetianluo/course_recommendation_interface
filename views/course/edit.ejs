@@ -1,0 +1,80 @@
+<div class="mini-banner auto">
+	<div class="container">
+		<h2> Edit Course Information </h2>
+    <% if (messages && messages['error'].length > 0) { %>
+      <div class="alert alert-danger">
+      <% messages['error'].forEach(function(message) { %>
+        <%= message %>
+        <br>
+      <% }); %>
+      </div>
+      <br>
+    <% } %>
+    <% if (messages && messages['warning'].length > 0) { %>
+      <div class="alert alert-warning">
+      <% messages['warning'].forEach(function(message) { %>
+        <%= message %>
+        <br>
+      <% }); %>
+      </div>
+      <br>
+    <% } %>
+    <% if (messages && messages['success'].length > 0) { %>
+      <div class="alert alert-success">
+      <% messages['success'].forEach(function(message) { %>
+        <%= message %>
+        <br>
+      <% }); %>
+      </div>
+      <br>
+    <% } %> 
+	</div><!---->
+</div>
+<div class="container wrapper">
+	<form action="/course/update/<%= course.id %>" method="POST" class="form-signin">
+		<div class="form-group">
+			<label>Course Name:</label> 
+			<input value="<%= course.courseName %>" name="courseName" type="text" class="form-control">
+		</div>
+		<div class="form-group">
+			<label>Teacher's Name:</label>
+			<input value="<%= course.teacherName %>" name="teacherName" type="text" class="form-control">
+		</div>
+		<div class="form-group">
+			<label>Credit</label>
+			<input value="<%= course.credit %>" name="credit" type="text" class="form-control">
+		</div>
+    <div class="form-group">
+      <select name="department" class="department-list form-control" id="departmentlist">
+      <option value="<%=course.department.id%>"><%=course.department.departmentName%></option>
+      <% _.each(departments, function(department) { %>
+      <% if (department.id != course.department.id){%><!--here be careful that after it populate, you need to write it is course.department.id-->
+      <option value="<%=department.id%>"><%=department.departmentName%></option>
+      <%}%>
+      <%})%>
+    </select>
+    </div>
+		<input type="submit" value="Proceed" class="btn btn-sm btn-primary btn-block"/>
+		<input type="hidden" name="_csrf" value="<%= _csrf %>"/>
+	</form>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+  $(".department-list").select2({
+    placeholder:'Please choose a department for the course'
+  });
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+

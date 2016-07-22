@@ -21,7 +21,6 @@ module.exports = {
       		FlashService.error(req,"This course already exists.")
       		return res.redirect('/course/new');
       	}else{
-      		sails.log.debug(req.param('courseName'));
       		Course.create(req.params.all(), function (err, course) {// here I forget 's' after the param
         if (err) {
           sails.log.debug('Error occurred: ' + err);
@@ -41,26 +40,48 @@ module.exports = {
           });
         }*/
         else{
-        	sails.log.debug(course);
-        	return res.redirect('/course/manage_courses');//!!!!!!!!be remember the route format!!! you need to do it by yourself
+        	return res.redirect('/admin/manage_courses');//!!!!!!!!be remember the route format!!! you need to do it by yourself
         }
       });
       	}
       })  
 	},
-	manage_courses:function(req,res){
-		   Course.find()
-			.populate('belongdepartment')
-			.exec(function(err,courses) {
-			if (err) return res.serverError(err);
-			//sails.log('Wow, there are %d users named Finn.', courses.length);
-  //sails.log('Check it out, some of them probably have a dad named Joshua or Martin:', courses);
-		});
-		sails.log.info(courses);
-		//Course.find(function (err, courses) {
-		
-      //return res.view({ title: 'Course Management', courses: courses });
-    }
+  edit:function(req,res,next){//
+      Course.findOne({id:req.param('id')})
+      .populate('department')// if you use populate, you need quotation
+      .exec(function (err, course) {
+        Department.find(function(err,departments){
+           if (err || !course) {
+            sails.log.debug(err);
+            return FlashService.error(req,"There is some problems to find the course")
+          }
+        return res.view({ course: course, title: 'Edit',departments:departments });
+        })
+      });
+  },
+  update:function(req,res,next){
+        Course.update({id:req.param('id')},req.params.all(),function(err,course){
+      if(err){
+        sails.log.debug(req.params.all());
+        return res.redirect('/course/edit/'+req.param('id'));//it can not be /user/edit/req.param('id')
+      };
+      FlashService.success(req, 'Successfully updated course information');
+      res.redirect('/admin/manage_courses');//
+    })
+  },
+  destroy:function(req,res,next){
+    Course.findOne({id:req.param('id')}, function (err, course) {
+      if (err) sails.log.debug(err);
+      if (err || !course) return res.redirect('404');
+
+      Course.destroy(req.param('id'), function courseDestroyed(err,course) {
+        if (err) return next(err);
+      });
+
+      return res.redirect('/admin/manage_courses');
+    });
+  }
+	
 
 };
 

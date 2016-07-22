@@ -1,10 +1,11 @@
+
 /***********
  *	COLORS
  ***********/
 @gray: #777574;
 
 .carousel-inner {
-  background: url('/images/banner.jpg');
+  background: url('/images/banner.jpg');/*you can not change the jpg to png*/
 }
 
 /******************

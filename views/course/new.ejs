@@ -37,7 +37,7 @@
 		<label>Course Name: </label><input type="text" class="form-control" placeholder="course name" name="courseName" tabindex="1">
 		<label>Teacher's Name: </label><input type="text" class="form-control" placeholder="teacher's name" name="teacherName" tabindex="1">
 		<label>Credit: </label><input type="text" class="form-control" placeholder="credit" name="credit" tabindex="1">
-		<select name="departmentid" class="department-list form-control" id="departmentlist" style="width:500px">
+		<select name="department" class="department-list form-control" id="departmentlist" style="width:500px">
     <option></option>
       <% _.each(departments, function(department) { %>
       <option value="<%=department.id%>"><%=department.departmentName%></option>

@@ -7,8 +7,15 @@
 
 module.exports = {
 	display:function(req,res){
-     	res.view();
-     },	
+     	Department.find(function(err,departments){
+     		Course.find()
+     			.populate('department')
+     			.exec(function(err,courses){
+     			if(err) return FlashService.error(req, 'There is something wrong...');;
+                return res.view({title:'Find similar courses',departments:departments,courses:courses});
+     			});
+     		})
+     	},	
      search:function(req,res){
      	var PythonShell = require('python-shell');
 

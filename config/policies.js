@@ -49,8 +49,21 @@ module.exports.policies = {
     'update': ['isAuthenticated', 'flash', 'hasID'],
     'signin':['flash']
   },
-  DepartmentController:[true,'flash'],
-  CourseController:[true,'flash'],
+  DepartmentController:{
+    '*':['flash','isAdmin']
+  },
+  CourseController:{
+    '*':['flash','isAdmin']//
+  },
+  SimilarcourseController:{
+    '*':['flash','hasID','isAuthenticated']
+  },
+  NextcourseController:{
+    '*':['flash','hasID','isAuthenticated']
+  },
+  PredictcourseController:{
+    '*':['flash','hasID','isAuthenticated']
+  }
 
   
 

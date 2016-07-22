@@ -19,11 +19,8 @@ module.exports = {
   		type:'INTEGER',
   		required:true
   	},
-  	belongdepartment:{
+  	department:{
   		model:'department'
-  	},
-  	departmentid:{
-  		type:'STRING'
   	}
 
   }

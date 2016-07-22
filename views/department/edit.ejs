@@ -1,0 +1,42 @@
+<div class="mini-banner auto">
+	<div class="container">
+		<h2> Edit Department Information </h2>
+    <% if (messages && messages['error'].length > 0) { %>
+      <div class="alert alert-danger">
+      <% messages['error'].forEach(function(message) { %>
+        <%= message %>
+        <br>
+      <% }); %>
+      </div>
+      <br>
+    <% } %>
+    <% if (messages && messages['warning'].length > 0) { %>
+      <div class="alert alert-warning">
+      <% messages['warning'].forEach(function(message) { %>
+        <%= message %>
+        <br>
+      <% }); %>
+      </div>
+      <br>
+    <% } %>
+    <% if (messages && messages['success'].length > 0) { %>
+      <div class="alert alert-success">
+      <% messages['success'].forEach(function(message) { %>
+        <%= message %>
+        <br>
+      <% }); %>
+      </div>
+      <br>
+    <% } %> 
+	</div>
+</div>
+<div class="container wrapper">
+	<form action="/department/update/<%= department.id %>" method="POST" class="form-signin">
+		<div class="form-group">
+			<label>Department Name:</label> 
+			<input value="<%= department.departmentName %>" name="departmentName" type="text" class="form-control" >
+		</div>
+		<input type="submit" value="Proceed" class="btn btn-sm btn-primary btn-block"/>
+		<input type="hidden" name="_csrf" value="<%= _csrf %>"/>
+	</form>
+</div

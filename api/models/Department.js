@@ -13,9 +13,6 @@ module.exports = {
   		type:'STRING',
   		required:true
   	},
-  	havecourses:{
-  		model:'course'
-  	}
 
   }
 };

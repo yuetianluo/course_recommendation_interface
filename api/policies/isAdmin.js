@@ -14,7 +14,7 @@ module.exports = function(req, res, next) {
   if (req.session.authenticated && req.session.user && req.session.user.admin) {
     return next();
   }
-	var requireAdminError = 'You must be an admin.';
+	var requireAdminError = 'You must be an admin to enter.';
 	req.session.messages = { error: [requireAdminError] };
 
   // User is not allowed

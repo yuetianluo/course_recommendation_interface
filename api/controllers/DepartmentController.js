@@ -39,17 +39,44 @@ module.exports = {
         }*/
         else{
         	sails.log.debug(department);
-        	return res.redirect('/department/manage_departments');//!!!!!!!!be remember the route format!!! you need to do it by yourself
+        	return res.redirect('/admin/manage_departments');//!!!!!!!!be remember the route format!!! you need to do it by yourself
         }
       });
       	}
       })  
 	},
-	manage_departments:function(req,res){
-		Department.find(function (err, departments) {
-      return res.view({ title: 'Department Management', departments: departments });
+  edit:function(req,res,next){//
+      Department.findOne({id:req.param('id')},function(err,department){
+         if (err || !department) {
+            sails.log.debug(err);
+            return FlashService.error(req,"There is some problems to find the department")
+          }
+        return res.view({ department: department, title: 'Edit' });
+      });
+  },
+  update:function(req,res,next){
+        Department.update({id:req.param('id')},req.params.all(),function(err,department){
+      if(err){
+        sails.log.debug(req.params.all());
+        return res.redirect('/department/edit/'+req.param('id'));//it can not be /user/edit/req.param('id')
+      };
+      FlashService.success(req, 'Successfully updated department information');
+      res.redirect('/admin/manage_departments');//
+    })
+  },
+  destroy:function(req,res,next){
+    Department.findOne({id:req.param('id')}, function (err, department) {
+      if (err) sails.log.debug(err);
+      if (err || !department) return res.redirect('404');
+
+      Department.destroy(req.param('id'), function departmentDestroyed(err,department) {
+        if (err) return next(err);
+      });
+
+      return res.redirect('/admin/manage_departments');
     });
-	}
+  }
+	
 	
 };
 

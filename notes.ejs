@@ -93,6 +93,103 @@ add a modal:
 
 
 
+similar courses:
+{
+    placeholder:'Select an course'
+}).on("opening",function(){
+  log($("#departmentlist").val())
+  if ($("#departmentlist").val!="Not specified") {////
+    /*Taking an array of all options-2 and kind of embedding it on the select1*/
+    var id = $("#departmentlist").val();
+    var options = $(this).data('options').filter('[value=' + id + ']');
+    $(this).html(options)
+  }else{
+    var id = $("#departmentlist").val();
+    var options = $(this).data('options');
+    $(this).html(options)
+  }
+}
+
+
+dashboard:
+<div class="mini-banner auto no-margin" id="get-started">
+  <div class="container">
+    <div class="row">
+      
+      <!-- Share Analytics -->
+      <div class="col-md-6">
+        <h3>1.Try to find similar courses you want to take!<a href="/similarcourse/display/<%=session.user.id%>"><br>Start here!</a></h3>
+        <br>
+        <p>Never worry about the courses you want to take are full, because we can find similar courses here! You can search for the courses and find all courses that are most similar to them</p>
+        <!--<form action="/analytic/upload" enctype="multipart/form-data" method="POST">
+          <label for="name">Analytic: </label><input type="text" class="form-control" placeholder="Module name" name="name">
+          <br>
+          <label for="description">Description: </label>
+          <textarea rows="5" type="text" class="form-control" name="description" placeholder="A description of the module."></textarea>
+          <br>
+          <label for="dataModels">Data Model Support:</label>
+
+          <br>
+          <label for="url">URL (optional):</label>
+          <input type="text" placeholder="URL to analytic module website, if any" name="url" class="form-control">
+          <br>
+        -->
+          <!-- Data Pre-Processing -->
+        <!--  <label for="preprocess">External Data Transformation Script:</label><br>
+          <p>Check <i>yes</i> if your upload includes a data pre-processing script to be run on the data model's files before applying the analytic module.</p>
+          <input id="preprocess-yes" type="radio" name="preprocess" value="Yes" disabled> Yes<br>
+          <input id="preprocess-no" type="radio" name="preprocess" value="No" checked> No<br><br>
+
+          <div id="dataScriptFields" style="display:none;">
+            <label for="dataFiles">Data Script Filepath Inputs:</label><br>
+            <p>Check the files that your data script will take in as input.</p>
+            <input type="checkbox" name="dataFile">Placeholder #1<br>
+            <input type="checkbox" name="dataFile">Placeholder #2<br>
+            <br>
+          </div>
+        -->
+          <!-- Misc -->
+        <!--  <input type="hidden" name="_csrf" value="<%= _csrf %>" />
+          <input type="hidden" name="owner" value="<%= user.id %>" />
+
+        --> <!-- File field is placed last due to parse bug with large files -->
+        <!--    <div class="input-group file-upload">
+              <span class="input-group-btn">
+                <span class="btn btn-primary btn-file">
+                  Browse&hellip; <input type="file" class="form-control" name="userArchiveFile" multiple>
+                </span>
+              </span>
+              <input type="text" class="form-control" readonly>
+            </div>
+            <p>Note: All uploaded files must be compressed in .ZIP format.</p>
+            <br>
+          <input type="submit" class="btn btn-sm btn-primary" value="Upload">
+        </form>-->
+        <br>
+        <br>
+        <h3 >2.Find courses that are most suitable for you to take next!<a href="/nextcourse/display/<%=session.user.id%>"><br>Start here!</a></h3>
+        <br>
+
+        <p>
+          Don's know what course are suitalbe for you to take next, also don't have wise guidance on the course plan. Don't worry! You can find the most suitable courses for you to take next here! We will give best recommendations to you based on your history.
+        </p>
+      </div>
+
+      <!-- Data Requests -->
+      <div class="col-md-5 col-md-offset-1">
+        <h3>3.Get your dream score under our guidance!<a href="/predictcourse/display/<%=session.user.id%>"><br>Start here!</a></h3>
+          <p>This will be the most magic thing in your academic career! Never dare to try 'real analysis'-the most crazy course in the world, because you know you will get either a E or Fail! Now you can try! And the most amazing thing is that you are more likely to get your dream score under our guidance! Choose one course you want to take and score you want to get, we will tell you whether you are prepared for this course, if not we will recommend you to take a sequence courses before you take the course you want to take and the requirement you need to meet. And finally you will get the grade you want to get!
+          </p>
+          <br><br>
+          <label>For example! </label><textarea rows="7" type="text" class="form-control" name="reason" placeholder="If you want to take course 'CS10' and get an A! According to what courses you have taken, we may recommend you to take these courses in sequence. 'CS6'(minimum requirement A-)---->'CS7'(minimum requirement B)---->'CS9'(minimum requirement B)---->(finally get)'CS10' A! " disabled></textarea>
+          <br>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
 
 

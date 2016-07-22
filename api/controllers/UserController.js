@@ -137,7 +137,7 @@ module.exports = {
   		}
 	},
 	logout:function(req,res){
-		return SessionService.destroySession(req, res);
+		return SessionService.destroySession(req, res);//
 	},
 	// Delete a user
 	destroy: function(req, res, next) {
