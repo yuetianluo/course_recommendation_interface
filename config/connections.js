@@ -66,11 +66,11 @@ module.exports.connections = {
   // },
     mongo:{
       adapter:'sails-mongo',
-      //host:'localhost',
-      //user:'',
-      //password:'',
-      //database:'moocCR',
-      url:process.env.DB_URL,
+      host:'localhost',
+      user:'',
+      password:'',
+      database:'moocCR',
+      //url:process.env.DB_URL,
       schema:true
     }
   /***************************************************************************

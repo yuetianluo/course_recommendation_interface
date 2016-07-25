@@ -9,7 +9,9 @@ module.exports = {
      display:function(req,res){
      	Department.find(function(err,departments){
      		Course.find()
-     			.populate('department')
+     			.populate('department',{
+     				sort:'departmentName DESC'
+     			})
      			.exec(function(err,courses){
      			if(err) return FlashService.error(req, 'There is something wrong...');;
                 return res.view({title:'Find similar courses',departments:departments,courses:courses});
