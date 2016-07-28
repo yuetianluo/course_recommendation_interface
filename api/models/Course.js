@@ -6,22 +6,28 @@
  */
 
 module.exports = {
-   
+  connection:'mysql',
+  schema:true,
+   tableName:'course_test2',
+   autoCreatedAt: false,
+   autoUpdatedAt: false,
   attributes: {
+  id:{
+    columnName:'id',
+      type:'integer',
+      primaryKey:true
+     },
   	courseName:{
   		type:'STRING',
+      columnName:'courseName',
   		required:true
   	},
-  	teacherName:{
-  		type:'STRING'
+  	coursesubjectid:{
+        model:'coursesubject'
   	},
-  	credit:{
-  		type:'INTEGER',
-  		required:true
-  	},
-  	department:{
-  		model:'department'
-  	}
+    departmentid:{
+      model:'department'
+    }
 
   }
 };

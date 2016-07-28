@@ -8,7 +8,7 @@
   <div class="container">
     <h2>Get your dream score under our guidance!</h2>
     <h4>
-    	This will be the most magic thing in your academic career! Never dare to try 'real analysis'-the most crazy course in the world, because you know you will get either a E or Fail! Now you can try! And the most amazing thing is that you are more likely to get your dream score under our guidance! Choose one course you want to take and score you want to get, we will tell you whether you are prepared for this course, if not we will recommend you to take a sequence courses before you take the course you want to take and the requirement you need to meet. And finally you will get the grade you want to get!
+    	This will be the most magic thing in your academic career! Never dare to try 'real analysis'-the most crazy course in the world, because you know you will get either a D or Fail! Now you can try! And the most amazing thing is that you are more likely to get your dream score under our guidance! Choose one course you want to take and score you want to get, we will tell you whether you are prepared for this course, if not we will recommend you to take a sequence courses before you take the course you want to take and the requirement you need to meet. And finally you will get the grade you want to get!
     </h4>
     <label>For example! </label><textarea rows="3" type="text" class="form-control" name="reason" placeholder="If you want to take course 'CS10' and get an A! According to what courses you have taken, we may recommend you to take these courses in sequence. 'CS6'(minimum requirement A-)---->'CS7'(minimum requirement B)---->'CS9'(minimum requirement B)---->(finally get)'CS10' A! " disabled></textarea>
   </div>
@@ -18,26 +18,56 @@
 <div class="row">
 <h3>Please choose a course you want to take and grade you want to get!</h3>
 	<br>
-	<div class="col-md-4">
-		<select name="department" class="department-list form-control" id="departmentlist" style="width:300px">
-		<option></option>
-				<option value="Not specified">Not specified</option>
-		      <% _.each(departments, function(department) { %>
-		      <option value="<%=department.id%>"><%=department.departmentName%></option>
-		      <%})%>
-		</select>
-	</div>
-	<form method="POST" action="/predictcourse/search" >
-	<div class="col-md-4">
-		<select class="course-list form-control" id="courselist" name="courseName" style="width:300px">
-		<option></option>
-    	<% _.each(courses, function(course) { %>
-        <option value="<%=course.department.id%>"><%=course.courseName%></option>
-        <%})%>
-		</select>
-	</div>
-	<div class="col-md-4">
-		<select class="grade-list"  style="width:100px">
+	<div class="col-md-6">
+    <select name="departmentid" class="department-list form-control" id="departmentlist" style="width:300px">
+    <option></option>
+    <option value="Not specified">Not specified</option>
+      <% _.each(departments, function(department) { %>
+      <option value="<%=department.id%>"><%=department.departmentName%></option>
+      <%})%>
+    </select>
+
+  </div>
+  <form method="POST" action="/predictcourse/search" >
+
+  <div class="col-md-6">
+    
+  <select class="coursesubject-list form-control" id="coursesubjectlist" name="coursesubjectName" style="width:300px">
+    <option></option>
+    <option value="Not specified">Not specified</option>
+    <% _.each(coursesubjects, function(coursesubject) { %>
+      <option value="<%=coursesubject.departmentid.id%>"><%=coursesubject.coursesubjectName%></option>
+      <%})%>
+    </select>
+
+    <select class="coursesubject-list form-control hidden" id="coursesubjectlist2" name="coursesubjectName" style="width:300px" >
+    <option></option><!--hidden select bar, so that you can choose it again-->
+    <% _.each(coursesubjects, function(coursesubject) { %>
+      <option value="<%=coursesubject.departmentid.id%>"><%=coursesubject.coursesubjectName%></option>
+      <%})%>
+    </select> 
+    </div>
+    <br>
+    <br>
+    <div class="col-md-6">
+    <select class="course-list form-control" id="courselist" name="courseName" style="width:300px">
+    <option></option>
+    <% _.each(courses, function(course) { %>
+      <option value="<%=course.coursesubjectid.id%>"><%=course.courseName%></option>
+      <%})%>
+    </select>
+
+    <select class="course-list form-control hidden" id="courselist2" name="courseName" style="width:300px" >
+    <option></option><!--hidden select bar, so that you can choose it again-->
+    <% _.each(courses, function(course) { %>
+      <option value="<%=course.coursesubjectid.id%>"><%=course.courseName%></option>
+      <%})%>
+    </select>  
+
+  </div>
+	<div class="col-md-6">
+		<select class="grade-list" id="grade-list" style="width:300px">
+    <option></option>
 		<option value="A">A</option>
         <option value="B">B</option>
 		<option value="C">C</option>
@@ -61,27 +91,69 @@
 
 
  <script type="text/javascript">
+                $(document).ready(function() {
+  $("#grade-list").select2({
+    placeholder:'Please choose grade you want to get'
+  })
+});
+</script>
+
+ <script type="text/javascript">
   $(document).ready(function() {
-  $("#departmentlist")
+  $("#coursesubjectlist")
    .select2({
-    placeholder:'Please choose a department'
-  }).on("change",function() {////////////////this is a way to add "change" event
+    placeholder:'Please choose a coursesubject'
+  }).on("select2:open",function() {////////////////this is a way to add "change" event, here you need to specify it as open!!!!
   if ($(this).val()=="Not specified"){
   //if ($(this).data('options') == undefined) {////
     /*Taking an array of all options-2 and kind of embedding it on the select1*/
-    $(this).data('options', $('#courselist option').clone());
+    $(this).data('options', $('#courselist2 option').clone());
     var options = $(this).data('options')
      $('#courselist').html(options);
   }else{
-    $(this).data('options', $('#courselist option').clone());
+    $(this).data('options', $('#courselist2 option').clone());
       var id = $(this).val();
   var options = $(this).data('options').filter('[value=' + id + ']');
   $('#courselist').html(options);
 }
 })
-
 });
 </script>  
+
+
+ <script type="text/javascript">
+  $(document).ready(function() {
+  $("#departmentlist")
+   .select2({
+    placeholder:'Please choose a department'
+  }).on("change",function() {////////////////this is a way to add "change" event
+  if ($(this).val()!="Not specified"){
+  //if ($(this).data('options') == undefined) {////
+    /*Taking an array of all options-2 and kind of embedding it on the select1*/
+    $(this).data('options', $('#coursesubjectlist2 option').clone());
+      var id = $(this).val();
+  var options = $(this).data('options').filter('[value=' + id + ']');
+
+  $('#coursesubjectlist').html(options);
+    $('#coursesubjectlist').append($('<option>', {
+    value: 'Not specified',
+    text: 'Not Specified'
+    }));
+    $.each(options, function (i, option) {
+    $('coursesubjectlist').append($('<option>', { 
+        value: option.value,
+        text : option.text 
+    }));
+   });
+  }else{
+    $(this).data('options', $('#coursesubjectlist2 option').clone());
+    var options = $(this).data('options')
+     $('#coursesubjectlist').html(options);
+  }
+})
+});
+</script>  
+
 
 <script type="text/javascript">
   $(document).ready(function() {

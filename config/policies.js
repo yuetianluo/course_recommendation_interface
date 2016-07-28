@@ -29,7 +29,7 @@ module.exports.policies = {
    '*': [true,'flash','getOnly'],
   
   AdminController: {//
-    '*': ['flash', 'isAdmin', 'getOnly']
+    '*': ['flash', 'isAdmin', 'getOnly']//
   },
 
   DashboardController: {
@@ -53,7 +53,10 @@ module.exports.policies = {
     '*':['flash','isAdmin']
   },
   CourseController:{
-    '*':['flash','isAdmin']//
+    '*':['flash','isAdmin']
+  },
+  CoursesubjectController:{
+    '*':['flash','isAdmin']
   },
   SimilarcourseController:{
     '*':['flash','hasID','isAuthenticated']

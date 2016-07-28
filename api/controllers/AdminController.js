@@ -21,10 +21,10 @@ module.exports = {
   manage_courses:function(req,res){
        Course.find()//if one course belongs to only one department, one department can have more than one courses, we need to add model in course, and the name of 
        //of that attribute should be the model name of the associated model. and sails will search based on the department id. so in course's attribute department, you should store department's id
-            .populate('department')
+            .populate('coursesubjectid')
+            .populate('departmentid')
             .exec(function(err,courses){
               if(err) return res.serverError(err);
-              //sails.log(courses);
               //sails.log(courses[0].department.departmentName), a little bit strange that it does not print here
               return res.view({title:'Course Management',courses:courses});
             });
@@ -44,7 +44,15 @@ module.exports = {
     Department.find(function (err, departments) {
       return res.view({ title: 'Department Management', departments: departments });
     });
-  }
+  },
+  manage_coursesubjects:function(req,res){
+       Coursesubject.find()
+            .populate('departmentid')
+            .exec(function(err,coursesubjects){
+              if(err) return res.serverError(err);
+              return res.view({title:'Coursesubject Management',coursesubjects:coursesubjects});
+            });
+    },
 
   
 };

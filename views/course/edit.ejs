@@ -36,38 +36,74 @@
 			<label>Course Name:</label> 
 			<input value="<%= course.courseName %>" name="courseName" type="text" class="form-control">
 		</div>
-		<div class="form-group">
-			<label>Teacher's Name:</label>
-			<input value="<%= course.teacherName %>" name="teacherName" type="text" class="form-control">
-		</div>
-		<div class="form-group">
-			<label>Credit</label>
-			<input value="<%= course.credit %>" name="credit" type="text" class="form-control">
-		</div>
-    <div class="form-group">
+		<div class="form-group"><!--here I do not associate course subject with department-->
       <select name="department" class="department-list form-control" id="departmentlist">
-      <option value="<%=course.department.id%>"><%=course.department.departmentName%></option>
+      <option value="<%=course.departmentid.id%>"><%=course.departmentid.departmentName%></option>
       <% _.each(departments, function(department) { %>
-      <% if (department.id != course.department.id){%><!--here be careful that after it populate, you need to write it is course.department.id-->
+      <% if (department.id != course.departmentid.id){%><!--here be careful that after it populate, you need to write it is course.department.id-->
       <option value="<%=department.id%>"><%=department.departmentName%></option>
       <%}%>
       <%})%>
     </select>
+    </div>
+    <div class="form-group">
+      <select name="coursesubject" class="coursesubject-list form-control" id="coursesubjectlist">
+      <option value="<%=course.coursesubjectid.id%>"><%=course.coursesubjectid.coursesubjectName%></option>
+      <% _.each(coursesubjects, function(coursesubject) { %>
+      <% if (coursesubject.id != course.coursesubjectid.id){%><!--here be careful that after it populate, you need to write it is course.coursesubject.id-->
+      <option value="<%=coursesubject.id%>"><%=coursesubject.coursesubjectName%></option>
+      <%}%>
+      <%})%>
+    </select>
+
+     <select class="coursesubject-list form-control hidden" id="coursesubjectlist2" name="coursesubjectName" style="width:300px" >
+    <option></option><!--hidden select bar, so that you can choose it again-->
+    <% _.each(coursesubjects, function(coursesubject) { %>
+      <option value="<%=coursesubject.departmentid.id%>"><%=coursesubject.coursesubjectName%></option>
+      <%})%>
+    </select>
+
     </div>
 		<input type="submit" value="Proceed" class="btn btn-sm btn-primary btn-block"/>
 		<input type="hidden" name="_csrf" value="<%= _csrf %>"/>
 	</form>
 </div>
 
+
+
 <script type="text/javascript">
   $(document).ready(function() {
-  $(".department-list").select2({
-    placeholder:'Please choose a department for the course'
+  $("#coursesubjectlist").select2({
+    placeholder:'Please choose a course subject for the course'
   });
 });
 </script>
 
 
+<script type="text/javascript">
+  $(document).ready(function() {
+  $("#departmentlist")
+   .select2({
+    placeholder:'Please choose a department'
+  }).on("change",function() {////////////////this is a way to add "change" event
+  if ($(this).val()!="Not specified"){
+  //if ($(this).data('options') == undefined) {////
+    /*Taking an array of all options-2 and kind of embedding it on the select1*/
+    $(this).data('options', $('#coursesubjectlist2 option').clone());
+      var id = $(this).val();
+  var options = $(this).data('options').filter('[value=' + id + ']');
+
+  $('#coursesubjectlist').html(options);
+
+
+  }else{
+    $(this).data('options', $('#coursesubjectlist2 option').clone());
+    var options = $(this).data('options')
+     $('#coursesubjectlist').html(options);
+  }
+})
+});
+</script> 
 
 
 

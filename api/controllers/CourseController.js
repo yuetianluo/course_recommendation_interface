@@ -8,12 +8,20 @@
 module.exports = {
 	new:function(req,res){
 		Department.find(function(err,departments){//////!!!!!!!I can still use Department Model here!!!
-		return res.view({
-			title:'Add a new course',
-			departments:departments
+      if(err) {
+        FlashService.error(req,"This is some error to get departments");
+        return res.redirect('/admin/manage_courses')
+      };
+		Coursesubject.find()
+                  .populate('departmentid')
+                  .exec(function(err,coursesubjects){
+      return res.view({
+      title:'Add a new course',
+      departments:departments,
+      coursesubjects:coursesubjects
+          });
+       });
 		});
-		})
-		
 	},
 	create:function(req,res,next){////////!!!!!!!!!!!!!!!!!!!!!the problem is the policy 'getOnly'
 		Course.findOneByCourseName({courseName:req.param('courseName')},function(err,course){
@@ -48,14 +56,19 @@ module.exports = {
 	},
   edit:function(req,res,next){//
       Course.findOne({id:req.param('id')})
-      .populate('department')// if you use populate, you need quotation
+      .populate('departmentid')// if you use populate, you need quotation
+      .populate('coursesubjectid')
       .exec(function (err, course) {
         Department.find(function(err,departments){
-           if (err || !course) {
+          Coursesubject.find()
+          .populate('departmentid')
+          .exec(function(err,coursesubjects){
+             if (err || !course) {
             sails.log.debug(err);
             return FlashService.error(req,"There is some problems to find the course")
           }
-        return res.view({ course: course, title: 'Edit',departments:departments });
+        return res.view({ course: course, title: 'Edit',departments:departments,coursesubjects:coursesubjects });
+          })
         })
       });
   },

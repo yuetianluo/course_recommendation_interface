@@ -12,11 +12,11 @@ module.exports = function(req, res, next) {
   // User is allowed, proceed to the next policy, 
   // or if this is the last policy, the controller
 
-    var ismyfile=(req.session.user.id===req.param('id'));
+    var ismyfile=(req.session.user.id==req.param('id'));//here there is some problems to use '==='.
 	var isadmin=req.session.user.admin;
 	if(ismyfile || isadmin ){ next();}else{
 	var requireaccessError = 'You are not allowed to access';
-	req.session.messages = { error: [requireaccessError] };
+	req.session.messages = { error: [requireaccessError] };//
 		return res.redirect('/signin');//I forget return
 	}
 

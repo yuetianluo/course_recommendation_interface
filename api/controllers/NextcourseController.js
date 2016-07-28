@@ -8,8 +8,14 @@
 module.exports = {
 	display:function(req,res){
      	Department.find(function(err,departments){
-     			if(err) FlashService.error(req, 'There is something wrong to display departments');
-                return res.view({title:'Find next courses',departments:departments});
+     		Coursesubject.find()
+     					 .populate('departmentid',{
+     					 	sort:'departmentName DESC'
+     					 })
+     					 .exec(function(err,coursesubjects){
+     					 	if(err) FlashService.error(req, 'There is something wrong to get departments');
+                return res.view({title:'Find next courses',departments:departments,coursesubjects:coursesubjects});
+     					 })
      		})
      	},	
      search:function(req,res){

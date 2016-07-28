@@ -35,14 +35,29 @@
     <br>
     <br><br>
 		<label>Course Name: </label><input type="text" class="form-control" placeholder="course name" name="courseName" tabindex="1">
-		<label>Teacher's Name: </label><input type="text" class="form-control" placeholder="teacher's name" name="teacherName" tabindex="1">
-		<label>Credit: </label><input type="text" class="form-control" placeholder="credit" name="credit" tabindex="1">
-		<select name="department" class="department-list form-control" id="departmentlist" style="width:500px">
+<!-- 		<label>Teacher's Name: </label><input type="text" class="form-control" placeholder="teacher's name" name="teacherName" tabindex="1">
+		<label>Credit: </label><input type="text" class="form-control" placeholder="credit" name="credit" tabindex="1"> -->
+		<select name="departmentid" class="department-list form-control" id="departmentlist" >
     <option></option>
       <% _.each(departments, function(department) { %>
       <option value="<%=department.id%>"><%=department.departmentName%></option>
       <%})%>
     </select>
+    <br>
+    <br>
+    <select class="coursesubject-list form-control" id="coursesubjectlist" name="coursesubjectName" >
+    <option></option>
+    <% _.each(coursesubjects, function(coursesubject) { %>
+      <option value="<%=coursesubject.departmentid.id%>"><%=coursesubject.coursesubjectName%></option>
+      <%})%>
+    </select>
+
+    <select class="coursesubject-list form-control hidden" id="coursesubjectlist2" name="coursesubjectName" >
+    <option></option><!--hidden select bar, so that you can choose it again-->
+    <% _.each(coursesubjects, function(coursesubject) { %>
+      <option value="<%=coursesubject.departmentid.id%>"><%=coursesubject.coursesubjectName%></option>
+      <%})%>
+    </select> 
     <!--<label>GPG Public Key ID: </label> <div class="pull-right"><a href="#GPGModal" data-toggle="modal" tabindex="2">(?)</a></div>
 		<input type="text" class="form-control" placeholder="64CD7S" name="publicKeyID" tabindex="1">
 		<label>GPG Public Key:</label> <div class="pull-right"><a href="#GPGModal" data-toggle="modal" tabindex="2">(?)</a></div>
@@ -51,17 +66,41 @@
 		-->
     <br>
     <br>
-		<input type="submit" class="btn btn-lg btn-primary btn-block" value="Create" tabindex="1">
+		<input type="submit" class="btn btn-md btn-primary btn-block" value="Create" tabindex="1">
 		<input type="hidden" name="_csrf" value="<%= _csrf %>" />
 	</form>
 </div>
 
 
 
+  <script type="text/javascript">
+  $(document).ready(function() {
+  $("#departmentlist")
+   .select2({
+    placeholder:'Please choose a department for the course'
+  }).on("change",function() {////////////////this is a way to add "change" event
+  if ($(this).val()!="Not specified"){
+  //if ($(this).data('options') == undefined) {////
+    /*Taking an array of all options-2 and kind of embedding it on the select1*/
+    $(this).data('options', $('#coursesubjectlist2 option').clone());
+      var id = $(this).val();
+  var options = $(this).data('options').filter('[value=' + id + ']');
+
+  $('#coursesubjectlist').html(options);
+
+  }else{
+    $(this).data('options', $('#coursesubjectlist2 option').clone());
+    var options = $(this).data('options')
+     $('#coursesubjectlist').html(options);
+  }
+})
+});
+</script>  
+
 <script type="text/javascript">
   $(document).ready(function() {
-  $(".department-list").select2({
-    placeholder:'Please choose for a department for the course'
+  $("#coursesubjectlist").select2({
+    placeholder:'Please choose for a course subject for the course'
   });
 });
 </script>

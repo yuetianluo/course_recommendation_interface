@@ -9,13 +9,22 @@ module.exports = {
      display:function(req,res){
      	Department.find(function(err,departments){
      		Course.find()
-     			.populate('department',{
+     			.populate('departmentid',{
      				sort:'departmentName DESC'
      			})
+                    .populate('coursesubjectid',{
+                         sort:'coursesubjectName DESC'
+                    })
      			.exec(function(err,courses){
-     			if(err) return FlashService.error(req, 'There is something wrong...');;
-                return res.view({title:'Find similar courses',departments:departments,courses:courses});
-     			});
+                         Coursesubject.find()
+                                      .populate('departmentid',{
+                                        sort:'departmentName DESC'
+                                      })
+                                      .exec(function(err,coursesubjects){
+                                        if(err) return FlashService.error(req, 'There is something wrong...');;
+                return res.view({title:'Find similar courses',departments:departments,courses:courses,coursesubjects:coursesubjects});
+                                      })
+                  });
      		})
      	},	
      search:function(req,res){

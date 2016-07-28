@@ -16,8 +16,8 @@
 <div class="container wrapper">
 <div class="row">
 <h3>Please choose course</h3>
-	<div class="col-md-6">
-    <select name="department" class="department-list form-control" id="departmentlist" style="width:300px">
+	<div class="col-md-4">
+    <select name="departmentid" class="department-list form-control" id="departmentlist" style="width:230px">
     <option></option>
     <option value="Not specified">Not specified</option>
       <% _.each(departments, function(department) { %>
@@ -27,17 +27,42 @@
 
 	</div>
   <form method="POST" action="/similarcourse/search" >
+
 	<div class="col-md-4">
 		
-		<select class="course-list form-control" id="courselist" name="courseName" style="width:300px">
+  <select class="coursesubject-list form-control" id="coursesubjectlist" name="coursesubjectName" style="width:230px">
+    <option></option>
+    <option value="Not specified">Not specified</option>
+    <% _.each(coursesubjects, function(coursesubject) { %>
+      <option value="<%=coursesubject.departmentid.id%>"><%=coursesubject.coursesubjectName%></option>
+      <%})%>
+    </select>
+
+    <select class="coursesubject-list form-control hidden" id="coursesubjectlist2" name="coursesubjectName" style="width:200px" >
+    <option></option><!--hidden select bar, so that you can choose it again-->
+    <% _.each(coursesubjects, function(coursesubject) { %>
+      <option value="<%=coursesubject.departmentid.id%>"><%=coursesubject.coursesubjectName%></option>
+      <%})%>
+    </select> 
+    </div>
+
+    <div class="col-md-3">
+		<select class="course-list form-control" id="courselist" name="courseName" style="width:185px">
 		<option></option>
     <% _.each(courses, function(course) { %>
-      <option value="<%=course.department.id%>"><%=course.courseName%></option>
+      <option value="<%=course.coursesubjectid.id%>"><%=course.courseName%></option>
       <%})%>
 		</select>
-      
+
+    <select class="course-list form-control hidden" id="courselist2" name="courseName" style="width:200px" >
+    <option></option><!--hidden select bar, so that you can choose it again-->
+    <% _.each(courses, function(course) { %>
+      <option value="<%=course.coursesubjectid.id%>"><%=course.courseName%></option>
+      <%})%>
+    </select>  
+
 	</div>
-  <div class="col-md-2">
+  <div class="pull-right">
 
     <input type="submit" class="btn btn-sm btn-success" value="Submit">
       <input type="hidden" name="_csrf" value="<%= _csrf %>" />
@@ -59,24 +84,64 @@
 
  <script type="text/javascript">
   $(document).ready(function() {
-  $("#departmentlist")
+  $("#coursesubjectlist")
    .select2({
-    placeholder:'Please choose a department'
-  }).on("change",function() {////////////////this is a way to add "change" event
+    placeholder:'Please choose a coursesubject'
+  }).on("select2:open",function() {////////////////this is a way to add "change" event, here you need to specify it as open!!!!
   if ($(this).val()=="Not specified"){
   //if ($(this).data('options') == undefined) {////
     /*Taking an array of all options-2 and kind of embedding it on the select1*/
-    $(this).data('options', $('#courselist option').clone());
+    $(this).data('options', $('#courselist2 option').clone());
     var options = $(this).data('options')
      $('#courselist').html(options);
   }else{
-    $(this).data('options', $('#courselist option').clone());
+    $(this).data('options', $('#courselist2 option').clone());
       var id = $(this).val();
   var options = $(this).data('options').filter('[value=' + id + ']');
   $('#courselist').html(options);
 }
 })
-
 });
 </script>  
+
+
+ <script type="text/javascript">
+  $(document).ready(function() {
+  $("#departmentlist")
+   .select2({
+    placeholder:'Please choose a department'
+  }).on("change",function() {////////////////this is a way to add "change" event
+  if ($(this).val()!="Not specified"){
+  //if ($(this).data('options') == undefined) {////
+    /*Taking an array of all options-2 and kind of embedding it on the select1*/
+    $(this).data('options', $('#coursesubjectlist2 option').clone());
+      var id = $(this).val();
+  var options = $(this).data('options').filter('[value=' + id + ']');
+
+  $('#coursesubjectlist').html(options);
+    $('#coursesubjectlist').append($('<option>', {
+    value: 'Not specified',
+    text: 'Not Specified'
+    }));
+    $.each(options, function (i, option) {
+    $('coursesubjectlist').append($('<option>', { 
+        value: option.value,
+        text : option.text 
+    }));
+   });
+  }else{
+    $(this).data('options', $('#coursesubjectlist2 option').clone());
+    var options = $(this).data('options')
+     $('#coursesubjectlist').html(options);
+  }
+})
+});
+</script>    
+
+<!-- 
+  // var length=$('#coursesubjectlist option').length()
+  // if(length<=1){
+  //   $(this).data('options', $('#courselist4 option').clone());
+  //   var options2 = $(this).data('options').filter('[value=' + id + ']');
+  //   $('#courselist3').html(options2);  -->
 
