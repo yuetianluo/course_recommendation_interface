@@ -34,14 +34,14 @@
     <option></option>
     <option value="Not specified">Not specified</option>
     <% _.each(coursesubjects, function(coursesubject) { %>
-      <option value="<%=coursesubject.departmentid.id%>"><%=coursesubject.coursesubjectName%></option>
+      <option value="<%=coursesubject.departmentid.id%>" id="<%=coursesubject.id%>"><%=coursesubject.coursesubjectName%></option>
       <%})%>
     </select>
 
     <select class="coursesubject-list form-control hidden" id="coursesubjectlist2" name="coursesubjectName" style="width:200px" >
     <option></option><!--hidden select bar, so that you can choose it again-->
     <% _.each(coursesubjects, function(coursesubject) { %>
-      <option value="<%=coursesubject.departmentid.id%>"><%=coursesubject.coursesubjectName%></option>
+      <option value="<%=coursesubject.departmentid.id%>" id="<%=coursesubject.id%>"><%=coursesubject.coursesubjectName%></option>
       <%})%>
     </select> 
     </div>
@@ -96,11 +96,25 @@
      $('#courselist').html(options);
   }else{
     $(this).data('options', $('#courselist2 option').clone());
-      var id = $(this).val();
+      var id = $(this).children(":selected").attr("id");
   var options = $(this).data('options').filter('[value=' + id + ']');
   $('#courselist').html(options);
 }
 })
+  .on("change",function(){
+    if ($(this).val()=="Not specified"){
+  //if ($(this).data('options') == undefined) {////
+    /*Taking an array of all options-2 and kind of embedding it on the select1*/
+    $(this).data('options', $('#courselist2 option').clone());
+    var options = $(this).data('options')
+     $('#courselist').html(options);
+  }else{
+    $(this).data('options', $('#courselist2 option').clone());
+      var id = $(this).children(":selected").attr("id");
+  var options = $(this).data('options').filter('[value=' + id + ']');
+  $('#courselist').html(options);
+}
+  })
 });
 </script>  
 
