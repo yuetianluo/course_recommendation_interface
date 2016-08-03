@@ -518,13 +518,13 @@ a.btn.btn-default.btn-sm.navbar-btn:hover {
 }
 
 .sub-banner {
-  border-top: solid 4px #127872;
-  padding-top: 5px;
+  border-top: solid 10px #127872;
+  padding-top: 10px;
   padding-bottom: 10px;
   background-color: #0e6471;
   width: 100%;
   color: white;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 }
 
 .sub-banner h1 {

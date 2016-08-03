@@ -65,19 +65,11 @@
         <ul class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
           <% if (session.authenticated) { %><!---->
-              <li><a id="Dashboard" class="navbar-button" href="/dashboard/display/<%=session.user.id%>">Dashboard</a></li>
+              <li><a id="Dashboard" class="navbar-button" href="/similarcourse/display/<%=session.user.id%>">Analysis 1</a></li>
+              <li><a id="Dashboard" class="navbar-button" href="/nextcourse/display/<%=session.user.id%>">Recommendation</a></li>
+              <li><a id="Dashboard" class="navbar-button" href="/predictcourse/display/<%=session.user.id%>">Analysis 3</a></li>
               <!--this is the way to write href in html!!!-->
-              <li id="Recommendation" class="dropdown" > 
-                  <a class="navbar-button dropdown-toggle" id="recommendation-menu" data-toggle="dropdown"><!--it should be a button, but whether set it as a button or a navbar-button depends on you-->
-                      Recommendation
-                      <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu" role="menu" aria-labelledby="recommendation-menu">
-                      <li role="presentation"><a role="menuitem" href="/similarcourse/display/<%=session.user.id%>">Find similar courses</a></li>
-                      <li role="presentation"><a role="menuitem" href="/nextcourse/display/<%=session.user.id%>">Find course suits you</a></li>
-                      <li role="presentation"><a role="menuitem" href="/predictcourse/display/<%=session.user.id%>">Analysis 3</a></li>
-                    </ul>
-              </li>
+        
               <% if (session.user && session.user.admin) { %>
               <li class="dropdown" id='Admin Panel'>
                     <a class="navbar-button dropdown-toggle" id="admin-menu" data-toggle="dropdown"><!--it should be a button, but whether set it as a button or a navbar-button depends on you-->
@@ -94,7 +86,6 @@
                       <li role="presentation"><a role="menuitem" href="/department/new">Add new department</a></li>
                       <li role="presentation"><a role="menuitem" href="/admin/manage_departments">Department Management</a></li>
                       <li role="presentation" class="divider"></li>
-                      <li role="presentation"><a role="menuitem" href="/report">Reports</a></li>
                       <li role="presentation" class="dropdown-header">Version 0.0.1</li>
                     </ul>
               </li>
@@ -106,8 +97,9 @@
           <ul class="nav navbar-nav navbar-right">
             <% if (session.authenticated) { %>
             <!-- Logout button -->
-              <li><p class="navbar-text">Logged in as <a href="/user/edit/<%= session.user.id %>"><font color="#5cb85c"><%= session.user.firstName %> <%= session.user.lastName %></font></a></p></li>
+              <li><p class="navbar-text">Hello <a href="/user/edit/<%= session.user.id %>"><font color="#5cb85c"><%= session.user.firstName %> <%= session.user.lastName %></font></a></p></li>
               <li><a class="btn btn-default btn-sm navbar-btn" href="/" onclick="window.open('/logout')">Logout</a></li>
+              <li><a class="btn btn-default btn-sm navbar-btn" href="/user/show/<%= session.user.id %>">Profile</a></li>
             <% } %>
 
             <!-- Login button -->
@@ -115,7 +107,7 @@
               <li><a class="btn btn-default btn-sm navbar-btn" href="/signin">Login</a></li>
               <li><a class="btn btn-default btn-sm navbar-btn" href="/signup">Sign up</a></li>
             <% } %>
-            <li><a class="btn btn-default btn-sm navbar-btn" href="/">Homepage</a></li>
+            
             <!-- end section -->
           </ul>
           
