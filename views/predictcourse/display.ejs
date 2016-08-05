@@ -26,7 +26,12 @@
       <option value="<%=department.id%>"><%=department.departmentName%></option>
       <%})%>
     </select>
-
+    <select name="departmentid" class="department-list form-control hidden" id="departmentlist2" style="width:230px">
+    <option></option>
+      <% _.each(departments, function(department) { %>
+      <option value="<%=department.id%>"><%=department.departmentName%></option>
+      <%})%>
+    </select>
   </div>
   <form method="POST" action="/predictcourse/search" >
 
@@ -53,14 +58,14 @@
     <select class="course-list form-control" id="courselist" name="courseName" style="width:300px">
     <option></option>
     <% _.each(courses, function(course) { %>
-      <option value="<%=course.coursesubjectid.id%>"><%=course.courseName%></option>
+      <option value="<%=course.coursesubjectid.id%>" id="<%=course.departmentid.id%>"><%=course.courseName%></option>
       <%})%>
     </select>
 
     <select class="course-list form-control hidden" id="courselist2" name="courseName" style="width:300px" >
     <option></option><!--hidden select bar, so that you can choose it again-->
     <% _.each(courses, function(course) { %>
-      <option value="<%=course.coursesubjectid.id%>"><%=course.courseName%></option>
+      <option value="<%=course.coursesubjectid.id%>" id="<%=course.departmentid.id%>"><%=course.courseName%></option>
       <%})%>
     </select>  
 
@@ -85,18 +90,20 @@
                 $(document).ready(function() {
   $("#courselist").select2({
     placeholder:'Please choose a course'
+  }).on("change",function(){
+  $(this).data('options', $('#coursesubjectlist2 option').clone());
+  var id = $(this).val();
+  var options = $(this).data('options').filter('[id=' + id + ']');
+
+  $('#coursesubjectlist').html(options);
+  $(this).data('options', $('#departmentlist2 option').clone());
+  var id = $(this).children(":selected").attr("id");
+  var options = $(this).data('options').filter('[value=' + id + ']');
+  $('#departmentlist').html(options);
   })
 });
 </script>
 
-
- <script type="text/javascript">
-                $(document).ready(function() {
-  $("#grade-list").select2({
-    placeholder:'Please choose grade you want to get'
-  })
-});
-</script>
 
  <script type="text/javascript">
   $(document).ready(function() {
@@ -116,20 +123,26 @@
   var options = $(this).data('options').filter('[value=' + id + ']');
   $('#courselist').html(options);
 }
-}).on("change",function(){
+})
+  .on("change",function(){
     if ($(this).val()=="Not specified"){
   //if ($(this).data('options') == undefined) {////
     /*Taking an array of all options-2 and kind of embedding it on the select1*/
     $(this).data('options', $('#courselist2 option').clone());
     var options = $(this).data('options')
      $('#courselist').html(options);
+     $(this).data('options', $('#department2 option').clone());
   }else{
     $(this).data('options', $('#courselist2 option').clone());
       var id = $(this).children(":selected").attr("id");
-  var options = $(this).data('options').filter('[value=' + id + ']');
-  $('#courselist').html(options);
+      var options = $(this).data('options').filter('[value=' + id + ']');
+      $('#courselist').html(options);
+      $(this).data('options', $('#departmentlist2 option').clone());
+      var id = $(this).val()
+      var options = $(this).data('options').filter('[value=' + id + ']');
+      $('#departmentlist').html(options);
 }
-})
+  })
 });
 </script>  
 
@@ -144,16 +157,22 @@
   //if ($(this).data('options') == undefined) {////
     /*Taking an array of all options-2 and kind of embedding it on the select1*/
     $(this).data('options', $('#coursesubjectlist2 option').clone());
-      var id = $(this).val();
-  var options = $(this).data('options').filter('[value=' + id + ']');
+    var id = $(this).val();
+    var options = $(this).data('options').filter('[value=' + id + ']');
+    $('#coursesubjectlist').html(options);
+    // $.each(options, function (i, option) {
+    // $('coursesubjectlist').append($('<option>', { 
+    //     value: option.value,
+    //     text : option.text 
+    // }));
+    // });
+    $(this).data('options', $('#courselist2 option').clone());
+     var id = $(this).val();
+     var options = $(this).data('options').filter('[id=' + id + ']');
 
-  $('#coursesubjectlist').html(options);
-    $('#coursesubjectlist').append($('<option>', {
-    value: 'Not specified',
-    text: 'Not Specified'
-    }));
+   $('#courselist').html(options);
     $.each(options, function (i, option) {
-    $('coursesubjectlist').append($('<option>', { 
+    $('courseslist').append($('<option>', { 
         value: option.value,
         text : option.text 
     }));
@@ -164,8 +183,13 @@
      $('#coursesubjectlist').html(options);
   }
 })
+  .on("select2:open",function(){
+    $(this).data('options', $('#departmentlist2 option').clone());
+    var options = $(this).data('options')
+     $('#departmentlist').html(options);
+  })
 });
-</script>  
+</script>    
 
 
 <script type="text/javascript">

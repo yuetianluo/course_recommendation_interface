@@ -15,7 +15,7 @@ module.exports = {
                     .populate('coursesubjectid',{
                          sort:'coursesubjectName DESC'
                     })
-     			.exec(function(err,courses){
+     			.exec(function(err,courses){//
                          Coursesubject.find()
                                       .populate('departmentid',{
                                         sort:'departmentName DESC'
