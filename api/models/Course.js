@@ -6,7 +6,7 @@
  */
 
 module.exports = {
-  connection:'mysql',
+  connection:'mysql',//
   schema:true,
    tableName:'course_test2',
    autoCreatedAt: false,

@@ -13,7 +13,7 @@ module.exports = {
    autoUpdatedAt: false,
   attributes: {
   	 id:{
-  	 	columnName:'id',
+  	 	columnName:'departmentid',
   	 	type:'integer',
   	 	primaryKey:true
   	 },
