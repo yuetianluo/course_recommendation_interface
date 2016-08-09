@@ -59,13 +59,13 @@ module.exports.policies = {
     '*':['flash','isAdmin']
   },
   SimilarcourseController:{
-    '*':['flash','hasID','isAuthenticated']
+    '*':['flash','usefunction']
   },
   NextcourseController:{
-    '*':['flash','hasID','isAuthenticated']
+    '*':['flash','usefunction']
   },
   PredictcourseController:{
-    '*':['flash','hasID','isAuthenticated']
+    '*':['flash','usefunction']
   }
 
   

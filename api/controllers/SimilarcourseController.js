@@ -27,8 +27,11 @@ module.exports = {
                   });
      		})
      	},	
-     search:function(req,res){
+     search:function(req,res){//
      	var PythonShell = require('python-shell');
+      //sails.log.debug(req.params.all());
+      sails.log.debug(req.params.all());
+      //Course.findOneByCourseName
 			var options = {
 			  mode: 'text',
 			 // scriptPath: '/Users/luoyuetian/Desktop/junior/summerproject/course_recommendation_interface',
