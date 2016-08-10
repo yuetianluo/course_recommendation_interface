@@ -92,15 +92,13 @@
 
 <script type="text/javascript">
   $(document).ready(function(){
-    $("#coursesubmit").click(function( ){
+    $("#coursesubmit").click(function(){
       var courseid=$("#courselist").val();
       $.ajax({
         url:'/similarcourse/search',
         type:'POST',
-        processData: false,
-        contentType: false,
         data:{
-          courseid:courseid
+          courseid:courseid  //be careful there is no punctuation
         },
         success:function(){
           $('#course-table > tbody:last-child').append('<tr><td>1</td><td>2</td><td>3</td><td>4</td></tr>');
