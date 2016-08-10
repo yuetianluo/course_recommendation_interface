@@ -29,10 +29,8 @@ module.exports = {
      	},	
      search:function(req,res){//
      	var PythonShell = require('python-shell');
-      //sails.log.debug(req.params.all());
       var courseid=req.param('courseid');
-      sails.log.debug(courseid);
-      //Course.findOneByCourseName
+      //sails.log.debug(courseid);
 			var options = {
 			  args: [courseid]
 			};
@@ -40,11 +38,20 @@ module.exports = {
 			PythonShell.run('word2vec.py', options, function (err, results) {
 			  if (err) throw err;
 			  // results is an array consisting of messages collected during execution
-			  console.log('results: %s', results[0]);// be careful here it should be '%s', it doesn't show any thing if I use -%j'
-			  
-        console.log(results[1])
+			  //console.log('results: %s', results);// be careful here it should be '%s', it doesn't show any thing if I use -%j'		  
+        Course.find({id:results})
+          .populate('departmentid',{
+            sort:'departmentName DESC'
+          })
+            .populate('coursesubjectid',{
+              sort:'coursesubjectName DESC'
+            })
+            .exec(function(err,courses){
+                //console.log(courses);
+                return res.ok(courses);
+            })
       });
-      return res.ok();
+      
 		},
 };
 

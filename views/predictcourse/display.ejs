@@ -18,10 +18,9 @@
 <div class="row">
 <h3>Please choose a course you want to take and grade you want to get!</h3>
 	<br>
-	<div class="col-md-6">
-    <select name="departmentid" class="department-list form-control" id="departmentlist" style="width:300px">
+	<div class="col-md-4">
+    <select name="departmentid" class="department-list form-control" id="departmentlist" style="width:230px">
     <option></option>
-    <option value="Not specified">Not specified</option>
       <% _.each(departments, function(department) { %>
       <option value="<%=department.id%>"><%=department.departmentName%></option>
       <%})%>
@@ -35,11 +34,9 @@
   </div>
   <form method="POST" action="/predictcourse/search" >
 
-  <div class="col-md-6">
-    
-  <select class="coursesubject-list form-control" id="coursesubjectlist" name="coursesubjectName" style="width:300px">
+  <div class="col-md-3">
+    <select class="coursesubject-list form-control" id="coursesubjectlist" name="coursesubjectName" style="width:180px">
     <option></option>
-    <option value="Not specified">Not specified</option>
     <% _.each(coursesubjects, function(coursesubject) { %>
       <option value="<%=coursesubject.departmentid.id%>" id="<%=coursesubject.id%>"><%=coursesubject.coursesubjectName%></option>
       <%})%>
@@ -51,49 +48,93 @@
       <option value="<%=coursesubject.departmentid.id%>" id="<%=coursesubject.id%>"><%=coursesubject.coursesubjectName%></option>
       <%})%>
     </select> 
-    </div>
-    <br>
-    <br>
-    <div class="col-md-6">
-    <select class="course-list form-control" id="courselist" name="courseName" style="width:300px">
+  </div>
+
+  <div class="col-md-3">
+    <select class="course-list form-control" id="courselist" name="courseName" style="width:185px">
     <option></option>
     <% _.each(courses, function(course) { %>
-      <option value="<%=course.coursesubjectid.id%>" id="<%=course.departmentid.id%>"><%=course.courseName%></option>
+      <option subjectid="<%=course.coursesubjectid.id%>" id="<%=course.departmentid.id%>" value="<%=course.id%>"><%=course.courseName%> </option>
       <%})%>
     </select>
 
-    <select class="course-list form-control hidden" id="courselist2" name="courseName" style="width:300px" >
+    <select class="course-list form-control hidden" id="courselist2" name="courseName" style="width:200px" >
     <option></option><!--hidden select bar, so that you can choose it again-->
     <% _.each(courses, function(course) { %>
-      <option value="<%=course.coursesubjectid.id%>" id="<%=course.departmentid.id%>"><%=course.courseName%></option>
+      <option subjectid="<%=course.coursesubjectid.id%>" id="<%=course.departmentid.id%>" value="<%=course.id%>"><%=course.courseName%></option>
       <%})%>
     </select>  
-
   </div>
-	<div class="col-md-6">
-		<select class="grade-list" id="grade-list" style="width:300px">
+	<div class="col-md-2">
+		<select class="grade-list" id="grade-list" style="width:80px">
     <option></option>
 		<option value="A">A</option>
         <option value="B">B</option>
 		<option value="C">C</option>
 		<option value="pass">Pass</option>
 		</select>
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" class="btn btn-sm btn-success" value="Submit">
+    <br>
+    <br>
+		<input id="coursesubmit" class="btn btn-sm btn-success" value="Submit" style="width:80px">
     	<input type="hidden" name="_csrf" value="<%= _csrf %>" />
 		
 	</div>
 	</form>
+  <br>
+  <br>
+  <br>
+  <div id=addtable>
+    <table class='table table-striped table-hover' id='course-table'>
+    <thead>
+      <tr>
+        <th>Taking Order</th>
+        <th>Course ID</th>
+        <th>Course Name</th>
+        <th>Course Subject</th>
+        <th>Department </th>
+        <th>Mininum requirement</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+    </table>
+  </div>
 </div>	
 </div>
 
 <script type="text/javascript">
-                $(document).ready(function() {
+  $(document).ready(function(){
+    $("#coursesubmit").click(function(){
+      var courseid=$("#courselist").val();
+      $.ajax({
+        url:'/predictcourse/search',
+        type:'POST',
+        data:{
+          courseid:courseid  //be careful there is no punctuation
+        },
+        success:function(response){
+          //console.log(response);//you can use this method to see data you pass to browser
+          var trHTML = "<table class='table table-striped table-hover' id='course-table'><thead><tr><th>Taking Order</th><th>Course ID</th><th>Course Name</th><th>Course Subject</th><th>Department </th><th>Mininum requirement</th></tr></thead><tbody>";
+          //the following part need to be changed
+          $.each(response, function (i, item) {
+            trHTML += '<tr><td>' + item.id + '</td><td>' + item.courseName + '</td><td>' + item.coursesubjectid.coursesubjectName + '</td><td>'+item.departmentid.departmentName+'</td></tr>';
+          });
+          trHTML +="</tbody></table>"
+          $('#addtable').append(trHTML);
+        }
+      })
+    });
+  });
+</script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
   $("#courselist").select2({
     placeholder:'Please choose a course'
   }).on("change",function(){
   $(this).data('options', $('#coursesubjectlist2 option').clone());
-  var id = $(this).val();
-  var options = $(this).data('options').filter('[id=' + id + ']');
+  var subjectid = $(this).children(":selected").attr("subjectid");
+  var options = $(this).data('options').filter('[id=' + subjectid + ']');
 
   $('#coursesubjectlist').html(options);
   $(this).data('options', $('#departmentlist2 option').clone());
@@ -109,39 +150,22 @@
   $(document).ready(function() {
   $("#coursesubjectlist")
    .select2({
-    placeholder:'Please choose a coursesubject'
-  }).on("select2:open",function() {////////////////this is a way to add "change" event, here you need to specify it as open!!!!
-  if ($(this).val()=="Not specified"){
-  //if ($(this).data('options') == undefined) {////
-    /*Taking an array of all options-2 and kind of embedding it on the select1*/
-    $(this).data('options', $('#courselist2 option').clone());
-    var options = $(this).data('options')
-     $('#courselist').html(options);
-  }else{
+    placeholder:'Please choose a subject'
+  }).on("select2:open",function() {///////this is a way to add "change" event, here you need to specify it as open!!!!
     $(this).data('options', $('#courselist2 option').clone());
       var id = $(this).children(":selected").attr("id");
-  var options = $(this).data('options').filter('[value=' + id + ']');
+  var options = $(this).data('options').filter('[subjectid=' + id + ']');
   $('#courselist').html(options);
-}
 })
   .on("change",function(){
-    if ($(this).val()=="Not specified"){
-  //if ($(this).data('options') == undefined) {////
-    /*Taking an array of all options-2 and kind of embedding it on the select1*/
-    $(this).data('options', $('#courselist2 option').clone());
-    var options = $(this).data('options')
-     $('#courselist').html(options);
-     $(this).data('options', $('#department2 option').clone());
-  }else{
     $(this).data('options', $('#courselist2 option').clone());
       var id = $(this).children(":selected").attr("id");
-      var options = $(this).data('options').filter('[value=' + id + ']');
+      var options = $(this).data('options').filter('[subjectid=' + id + ']');
       $('#courselist').html(options);
       $(this).data('options', $('#departmentlist2 option').clone());
       var id = $(this).val()
       var options = $(this).data('options').filter('[value=' + id + ']');
       $('#departmentlist').html(options);
-}
   })
 });
 </script>  
@@ -152,50 +176,33 @@
   $("#departmentlist")
    .select2({
     placeholder:'Please choose a department'
-  }).on("change",function() {////////////////this is a way to add "change" event
-  if ($(this).val()!="Not specified"){
-  //if ($(this).data('options') == undefined) {////
-    /*Taking an array of all options-2 and kind of embedding it on the select1*/
+  }).on("change",function() {//this is a way to add "change" event
+
     $(this).data('options', $('#coursesubjectlist2 option').clone());
     var id = $(this).val();
     var options = $(this).data('options').filter('[value=' + id + ']');
     $('#coursesubjectlist').html(options);
-    // $.each(options, function (i, option) {
-    // $('coursesubjectlist').append($('<option>', { 
-    //     value: option.value,
-    //     text : option.text 
-    // }));
-    // });
+
     $(this).data('options', $('#courselist2 option').clone());
      var id = $(this).val();
      var options = $(this).data('options').filter('[id=' + id + ']');
-
-   $('#courselist').html(options);
-    $.each(options, function (i, option) {
-    $('courseslist').append($('<option>', { 
-        value: option.value,
-        text : option.text 
-    }));
-   });
-  }else{
-    $(this).data('options', $('#coursesubjectlist2 option').clone());
-    var options = $(this).data('options')
-     $('#coursesubjectlist').html(options);
-  }
-})
-  .on("select2:open",function(){
+    $('#courselist').html(options);
+    })
+    .on("select2:open",function(){
     $(this).data('options', $('#departmentlist2 option').clone());
     var options = $(this).data('options')
      $('#departmentlist').html(options);
-  })
+    })
 });
-</script>    
+</script>     
 
 
 <script type="text/javascript">
   $(document).ready(function() {
   $(".grade-list").select2({
-  	placeholder:'Please choose the grade you want to get!'
+  	placeholder:'grade'
   });
 });
 </script>
+
+
