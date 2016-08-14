@@ -7,9 +7,16 @@ import gensim, logging
 courseNum=str(sys.argv[1])
 model = gensim.models.Word2Vec.load('course_word2vec')
 x=[];
-aimingcourse=model.similar_by_word(courseNum)
-for course in aimingcourse:
-	print(str(course[0]))
+try:
+	aimingcourse=model.similar_by_word(courseNum)
+	for course in aimingcourse:
+		print(str(course[0]))
+	for course in aimingcourse:
+		print(str(course[1]))
+except KeyError as e:
+	print('Sorry, there is not sufficient records about this course, so we can not give you recommendation with strong confidence')
+finally:
+	error="there is some error"
 
 
 	

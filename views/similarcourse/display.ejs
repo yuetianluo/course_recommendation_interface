@@ -1,3 +1,34 @@
+
+<% if (messages && messages['error'].length > 0) { %>
+  <div class="alert alert-danger" >
+  <% messages['error'].forEach(function(message) { %>
+    <%= message %>
+    <br>
+  <% }); %>
+  </div>
+  <br>
+<% } %>
+<% if (messages && messages['warning'].length > 0) { %>
+  <div class="alert alert-warning">
+  <% messages['warning'].forEach(function(message) { %>
+    <%= message %>
+    <br>
+  <% }); %>
+  </div>
+  <br>
+<% } %>
+<% if (messages && messages['success'].length > 0) { %>
+  <div class="alert alert-success">
+  <% messages['success'].forEach(function(message) { %>
+    <%= message %>
+    <br>
+  <% }); %>
+  </div>
+  <br>
+<% } %> 
+     
+
+
 <div class="mini-banner auto">
 	<div class="container">
 		<h2>Analysis one</h2>
@@ -40,7 +71,7 @@
     <option></option>
     <% _.each(coursesubjects, function(coursesubject) { %>
       <option value="<%=coursesubject.departmentid.id%>" id="<%=coursesubject.id%>"><%=coursesubject.coursesubjectName%></option>
-      <%})%>
+      <%})%> 
     </select>
 
     <select class="coursesubject-list form-control hidden" id="coursesubjectlist2" name="coursesubjectName" style="width:200px" >
@@ -54,16 +85,12 @@
   <div class="col-md-3">
 		<select class="course-list form-control" id="courselist" name="courseName" style="width:185px">
 		<option></option>
-    <% _.each(courses, function(course) { %>
-      <option subjectid="<%=course.coursesubjectid.id%>" id="<%=course.departmentid.id%>" value="<%=course.id%>"><%=course.courseName%> </option>
-      <%})%>
+   
 		</select>
 
     <select class="course-list form-control hidden" id="courselist2" name="courseName" style="width:200px" >
     <option></option><!--hidden select bar, so that you can choose it again-->
-    <% _.each(courses, function(course) { %>
-      <option subjectid="<%=course.coursesubjectid.id%>" id="<%=course.departmentid.id%>" value="<%=course.id%>"><%=course.courseName%></option>
-      <%})%>
+    
     </select>  
 	</div>
   <div class="pull-right">
@@ -94,12 +121,19 @@
           $('#course-table').remove();
           $('#title').remove();
           //console.log(response);//you can use this method to see data you pass to browser
-          var trHTML = "<h3 id='title'>Top 10 similar courses</h3><table class='table table-striped table-hover' id='course-table'><thead><tr><th>Course ID</th><th>Course Name</th><th>Course Subject</th><th>Department </th></tr></thead><tbody>";
+          var trHTML = "<h3 id='title'>Top 10 similar courses</h3><table class='table table-striped table-hover' id='course-table'><thead><tr><th>Course ID</th><th>Course Name</th><th>Course Subject</th><th>Department </th><th>Cosine Similarity</th></tr></thead><tbody>";
           $.each(response, function (i, item) {
-            trHTML += '<tr><td>' + item.id + '</td><td>' + item.courseName + '</td><td>' + item.coursesubjectid.coursesubjectName + '</td><td>'+item.departmentid.departmentName+'</td></tr>';
+            trHTML += '<tr><td>' + item.id + '</td><td>' + item.courseName+'</td><td>' + item.coursesubjectid.coursesubjectName+'</td><td>' + item.departmentid.departmentName + '</td><td>'+item.cosinesimilarity+'</td></tr>';
           });
           trHTML +="</tbody></table>"
           $('#addtable').append(trHTML);
+        },
+        failure:function(msg){
+          $('#addtable').append('<div class="alert alert-danger" id="courseerror"><h3>'+msg+'</h3></div>')
+        },
+        error:function(jqXHR, textStatus,errorMessage){
+        $('#course-table').remove();
+        $('#addtable').append('<div class="alert alert-danger" id="course-table"><h3>Sorry, there is not sufficient records on this course, so we can not give you similar courses with strong confidence</h3></div>')
         }
       })
     });
@@ -111,19 +145,9 @@
   $(document).ready(function() {
   $("#courselist").select2({
     placeholder:'Please choose a course'
-  }).on("change",function(){
-  $(this).data('options', $('#coursesubjectlist2 option').clone());
-  var subjectid = $(this).children(":selected").attr("subjectid");
-  var options = $(this).data('options').filter('[id=' + subjectid + ']');
-
-  $('#coursesubjectlist').html(options);
-  $(this).data('options', $('#departmentlist2 option').clone());
-  var id = $(this).children(":selected").attr("id");
-  var options = $(this).data('options').filter('[value=' + id + ']');
-  $('#departmentlist').html(options);
   })
 });
-</script>
+</script> 
 
 
  <script type="text/javascript">
@@ -131,17 +155,40 @@
   $("#coursesubjectlist")
    .select2({
     placeholder:'Please choose a subject'
-  }).on("select2:open",function() {///////this is a way to add "change" event, here you need to specify it as open!!!!
-    $(this).data('options', $('#courselist2 option').clone());
-      var id = $(this).children(":selected").attr("id");
-  var options = $(this).data('options').filter('[subjectid=' + id + ']');
-  $('#courselist').html(options);
-})
-  .on("change",function(){
-    $(this).data('options', $('#courselist2 option').clone());
-      var id = $(this).children(":selected").attr("id");
-      var options = $(this).data('options').filter('[subjectid=' + id + ']');
-      $('#courselist').html(options);
+  }).on("change",function(){
+    //$(this).data('options', $('#courselist2 option').clone());
+      var coursesubjectid = $(this).children(":selected").attr("id");
+      console.log(coursesubjectid);
+      $.ajax({
+      url:'/similarcourse/filterbycoursesubject',
+      type:'POST',
+      data:{
+          coursesubjectid:coursesubjectid  //be careful there is no punctuation
+        },
+      success:function(response){
+          $('#courselist').empty().append($('<option>'));
+          $.each(response, function (i, option) {
+          $('#courselist').append($('<option>', { //when you use jquery, you need '#' before the id name
+         value: option.id,
+         id:option.departmentindex,
+         subjectid:option.coursesubjectindex,
+         text : option.courseName
+          }));
+          });
+          $('#courselist2').empty().append($('<option>'));
+          $.each(response, function (i, option) {
+          $('#courselist2').append($('<option>', { //when you use jquery, you need '#' before the id name
+         value: option.id,
+         id:option.departmentindex,
+         subjectid:option.coursesubjectindex,
+         text : option.courseName
+          }));
+          });
+      }
+    });
+      // var options = $(this).data('options').filter('[subjectid=' + id + ']');
+      // $('#courselist').empty().append($('<option>'));
+      // $('#courselist').append(options);
       $(this).data('options', $('#departmentlist2 option').clone());
       var id = $(this).val()
       var options = $(this).data('options').filter('[value=' + id + ']');
@@ -161,20 +208,52 @@
     $(this).data('options', $('#coursesubjectlist2 option').clone());
     var id = $(this).val();
     var options = $(this).data('options').filter('[value=' + id + ']');
-    $('#coursesubjectlist').html(options);
-
-    $(this).data('options', $('#courselist2 option').clone());
-     var id = $(this).val();
-     var options = $(this).data('options').filter('[id=' + id + ']');
-    $('#courselist').html(options);
-    })
+    $('#coursesubjectlist').empty().append($('<option>'))
+    $('#coursesubjectlist').append(options);//if you don't want to show your first choice, you can't use .html(),just append
+    var departmentid=$("#departmentlist").val();
+    $.ajax({
+      url:'/similarcourse/filterbydepartment',
+      type:'POST',
+      data:{
+          departmentid:departmentid  //be careful there is no punctuation
+        },
+      success:function(response){
+          $('#courselist').empty().append($('<option>'));
+          $.each(response, function (i, option) {
+          $('#courselist').append($('<option>', { //when you use jquery, you need '#' before the id name
+         value: option.id,
+         id:option.departmentindex,
+         subjectid:option.coursesubjectindex,
+         text : option.courseName
+          }));
+          });
+          $('#courselist2').empty().append($('<option>'));
+          $.each(response, function (i, option) {
+          $('#courselist2').append($('<option>', { //when you use jquery, you need '#' before the id name
+         value: option.id,
+         id:option.departmentindex,
+         subjectid:option.coursesubjectindex,
+         text : option.courseName
+          }));
+          });
+      }
+    });
+    // });
+    // $(this).data('options', $('#courselist2 option').clone());
+    //  var id = $(this).val();
+    //  var options = $(this).data('options').filter('[id=' + id + ']');
+    // $('#courselist').append(options);
+    
+    })//you can not add ';' here!!!
     .on("select2:open",function(){
     $(this).data('options', $('#departmentlist2 option').clone());
     var options = $(this).data('options')
      $('#departmentlist').html(options);
-    })
-});
+    });
+  });
 </script>    
+
+
 
 
 <!-- <script>

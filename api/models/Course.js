@@ -8,7 +8,7 @@
 module.exports = {
   connection:'mysql',//
   schema:true,
-   tableName:'course_test2',
+   tableName:'course_test1',
    autoCreatedAt: false,
    autoUpdatedAt: false,
   attributes: {
@@ -22,6 +22,14 @@ module.exports = {
       columnName:'courseName',
   		required:true
   	},
+    coursesubjectindex:{
+      type:'integer',
+      columnName:'coursesubjectindex'
+    },
+    departmentindex:{
+      type:'integer',
+      columnName:'departmentindex'
+    },
   	coursesubjectid:{
         model:'coursesubject'
   	},

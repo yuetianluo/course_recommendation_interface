@@ -65,7 +65,7 @@
         <ul class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
           <% if (session.authenticated) { %><!---->
-              <li><a id="Dashboard" class="navbar-button" href="/similarcourse/display/<%=session.user.id%>">Analysis 1</a></li>
+              <li><a id="Dashboard" class="navbar-button" href="/similarcourse/display/">Analysis 1</a></li>
               <li><a id="Dashboard" class="navbar-button" href="/nextcourse/display/<%=session.user.id%>">Recommendation</a></li>
               <li><a id="Dashboard" class="navbar-button" href="/predictcourse/display/<%=session.user.id%>">Analysis 3</a></li>
               <!--this is the way to write href in html!!!-->

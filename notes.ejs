@@ -277,3 +277,31 @@ layout:
                       <li role="presentation"><a role="menuitem" href="/predictcourse/display/<%=session.user.id%>">Analysis 3</a></li>
                     </ul>
               </li>
+
+
+similar_course:
+ <!-- <% _.each(courses, function(course) { %>
+      <option subjectid="<%=course.coursesubjectid.id%>" id="<%=course.departmentid.id%>" value="<%=course.id%>"><%=course.courseName%> </option>
+      <%})%> -->
+
+
+.on("select2:open",function() {///////this is a way to add "change" event, here you need to specify it as open!!!!
+    $(this).data('options', $('#courselist2 option').clone());
+      var id = $(this).children(":selected").attr("id");
+  var options = $(this).data('options').filter('[subjectid=' + id + ']');
+  $('#courselist').empty().append($('<option>'));
+  $('#courselist').append(options);
+})
+
+
+.on("change",function(){
+  $(this).data('options', $('#coursesubjectlist2 option').clone());
+  var subjectid = $(this).children(":selected").attr("subjectid");
+  var options = $(this).data('options').filter('[id=' + subjectid + ']');
+
+  $('#coursesubjectlist').html(options);
+  $(this).data('options', $('#departmentlist2 option').clone());
+  var id = $(this).children(":selected").attr("id");
+  var options = $(this).data('options').filter('[value=' + id + ']');
+  $('#departmentlist').html(options);
+  })
