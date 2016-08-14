@@ -50,7 +50,7 @@ module.exports = {
     },
     filterbycoursesubject:function(req,res){
       var coursesubjectid=req.param('coursesubjectid');
-      console.log(coursesubjectid);
+      //console.log(coursesubjectid);
       Course.find({coursesubjectindex:coursesubjectid})
         .populate('departmentid',{
             sort:'departmentName DESC'

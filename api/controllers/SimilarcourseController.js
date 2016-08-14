@@ -38,7 +38,6 @@ module.exports = {
           idresults=results.slice(0,10);
           cosinesimilar=results.slice(10,20);
           res.locals.cosinesimilar=cosinesimilar;
-          console.log(cosinesimilar);
           Course.find({id:idresults})
           .populate('departmentid',{
             sort:'departmentName DESC'
@@ -50,7 +49,7 @@ module.exports = {
                 index=0;
                 for (var i=0; i<10;i++){
                   courses[i].cosinesimilarity=Number(cosinesimilar[i]).toFixed(3);
-                  console.log(courses[i]);
+                  //console.log(courses[i]);
                 }
                 //console.log(courses);
                 return res.ok(courses);

@@ -155,23 +155,13 @@
   });
 </script>
 
-<!-- <script type="text/javascript">
+<script type="text/javascript">
   $(document).ready(function() {
   $("#courselist").select2({
     placeholder:'Please choose a course'
-  }).on("change",function(){
-  $(this).data('options', $('#coursesubjectlist2 option').clone());
-  var subjectid = $(this).children(":selected").attr("subjectid");
-  var options = $(this).data('options').filter('[id=' + subjectid + ']');
-
-  $('#coursesubjectlist').html(options);
-  $(this).data('options', $('#departmentlist2 option').clone());
-  var id = $(this).children(":selected").attr("id");
-  var options = $(this).data('options').filter('[value=' + id + ']');
-  $('#departmentlist').html(options);
   })
 });
-</script> -->
+</script> 
 
 
  <script type="text/javascript">
