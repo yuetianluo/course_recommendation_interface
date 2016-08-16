@@ -21,6 +21,7 @@ module.exports = {
      search:function(req,res){//
      	var PythonShell = require('python-shell');
       var courseid=req.param('courseid');
+      console.log(courseid)
       //sails.log.debug(courseid);
 			var options = {
 			  args: [courseid]
@@ -37,22 +38,33 @@ module.exports = {
         else{
           idresults=results.slice(0,10);
           cosinesimilar=results.slice(10,20);
+          total=[]
+          console.log(cosinesimilar)
+          console.log(idresults)
           res.locals.cosinesimilar=cosinesimilar;
           Course.find({id:idresults})
           .populate('departmentid',{
-            sort:'departmentName DESC'
           })
             .populate('coursesubjectid',{
-              sort:'coursesubjectName DESC'
             })
             .exec(function(err,courses){
                 index=0;
                 for (var i=0; i<10;i++){
-                  courses[i].cosinesimilarity=Number(cosinesimilar[i]).toFixed(3);
+                  for (var j=0; j<10; j++)
+                  {
+                    if(courses[i].id==idresults[j])
+                    {
+                      courses[i].cosinesimilarity=Number(cosinesimilar[j]).toFixed(3);
+                    }
+                  }
                   //console.log(courses[i]);
                 }
-                //console.log(courses);
-                return res.ok(courses);
+                var courses2 = courses.slice(0);
+                courses2.sort(function(a,b) {
+                return a.cosinesimilarity - b.cosinesimilarity;
+                });
+                console.log(courses2);
+                return res.ok(courses2);
             });
         }
       });
