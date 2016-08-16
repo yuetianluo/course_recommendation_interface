@@ -61,7 +61,7 @@ module.exports = {
                 }
                 var courses2 = courses.slice(0);
                 courses2.sort(function(a,b) {
-                return a.cosinesimilarity - b.cosinesimilarity;
+                return b.cosinesimilarity-a.cosinesimilarity ;
                 });
                 console.log(courses2);
                 return res.ok(courses2);
@@ -72,7 +72,7 @@ module.exports = {
     filterbydepartment:function(req,res){
       var departmentid=req.param('departmentid');
       //console.log(departmentid);
-      Course.find({departmentindex:departmentid})
+      Course.find({departmentindex:departmentid, sort:'courseName ASC'})
         .populate('departmentid',{
             sort:'departmentName DESC'
           })
@@ -87,12 +87,12 @@ module.exports = {
     filterbycoursesubject:function(req,res){
       var coursesubjectid=req.param('coursesubjectid');
       //console.log(coursesubjectid);
-      Course.find({coursesubjectindex:coursesubjectid})
+      Course.find({coursesubjectindex:coursesubjectid,sort:'courseName ASC'})
         .populate('departmentid',{
-            sort:'departmentName DESC'
+            sort:'departmentName ASC'
           })
             .populate('coursesubjectid',{
-              sort:'coursesubjectName DESC'
+              sort:'coursesubjectName ASC'
             })
             .exec(function(err,courses){
                 //console.log(courses);
