@@ -50,6 +50,7 @@
 <div class="row">
 <h3>Please choose a course you want to take and grade you want to get!</h3>
 	<br>
+
 	<div class="col-md-4">
     <select name="departmentid" class="department-list form-control" id="departmentlist" style="width:230px">
     <option></option>
@@ -103,7 +104,7 @@
 		</select>
     <br>
     <br>
-		<input id="coursesubmit" class="btn btn-sm btn-success" value="Submit" style="width:80px">
+		<input id="coursesubmit" type="button" value="Submit" style="width:80px;background-color: #4CAF50;color:white" onclick="this.style.color='#000000'; this.style.backgroundColor = '#ffffff'">
     	<input type="hidden" name="_csrf" value="<%= _csrf %>" />
 		
 	</div>
@@ -207,6 +208,8 @@
       var id = $(this).val()
       var options = $(this).data('options').filter('[value=' + id + ']');
       $('#departmentlist').html(options);
+      var options = $(this).data('options')
+      $('#departmentlist').append(options);
   })
 });
 </script>  
@@ -259,10 +262,10 @@
     // $('#courselist').append(options);
     
     })//you can not add ';' here!!!
-    .on("select2:open",function(){
+    .on("select2:close",function(){
     $(this).data('options', $('#departmentlist2 option').clone());
     var options = $(this).data('options')
-     $('#departmentlist').html(options);
+     $('#departmentlist').append(options);
     });
   });
 </script>    

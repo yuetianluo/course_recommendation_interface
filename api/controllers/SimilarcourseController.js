@@ -39,8 +39,6 @@ module.exports = {
           idresults=results.slice(0,10);
           cosinesimilar=results.slice(10,20);
           total=[]
-          console.log(cosinesimilar)
-          console.log(idresults)
           res.locals.cosinesimilar=cosinesimilar;
           Course.find({id:idresults})
           .populate('departmentid',{
@@ -57,13 +55,12 @@ module.exports = {
                       courses[i].cosinesimilarity=Number(cosinesimilar[j]).toFixed(3);
                     }
                   }
-                  //console.log(courses[i]);
                 }
                 var courses2 = courses.slice(0);
                 courses2.sort(function(a,b) {
                 return b.cosinesimilarity-a.cosinesimilarity ;
                 });
-                console.log(courses2);
+                //console.log(courses2);
                 return res.ok(courses2);
             });
         }
@@ -98,7 +95,6 @@ module.exports = {
                 //console.log(courses);
                 return res.ok(courses);
             });
-    },
-
+      },
 };
 

@@ -30,14 +30,16 @@
 </div>
 
 <div class="container">
-	<form action="/user/create" method="POST" class="form-signin">
+	<form action="/user/create" method="POST" class="form-signin"><!---->
 		Since this is your first time using this service, please fill in the following information for our records.
     <br>
     <br><br>
 		<label>First Name: </label><input type="text" class="form-control" placeholder="first name" name="firstName" tabindex="1">
 		<label>Last Name: </label><input type="text" class="form-control" placeholder="last name" name="lastName" tabindex="1">
 		<label>Email: </label><input type="email" class="form-control" placeholder="your email" name="email" tabindex="1">
+    <div>
 		<label>Password: </label><input type="password" class="form-control" placeholder="your password" name="password" tabindex="1">
+    </div>
     <label>Password Comfirmation: </label><input type="password" class="form-control" placeholder="password comfirmation" name="comfirmation" tabindex="1">
     <!--<label>GPG Public Key ID: </label> <div class="pull-right"><a href="#GPGModal" data-toggle="modal" tabindex="2">(?)</a></div>
 		<input type="text" class="form-control" placeholder="64CD7S" name="publicKeyID" tabindex="1">
