@@ -48,7 +48,7 @@
 <div class="row">
 <h3>Please choose course</h3>
   <form method="POST" action="/similarcourse/search" id="courseform" > 
-	<div class="col-md-4">
+	<div class="col-md-3">
     <select name="departmentid" class="department-list form-control" id="departmentlist" style="width:230px" tabindex="1">
     <option></option>
       <% _.each(departments, function(department) { %>
@@ -67,7 +67,7 @@
 
 	<div class="col-md-3">
 		
-    <select class="coursesubject-list form-control" id="coursesubjectlist" name="coursesubjectName" style="width:200px" tabindex="1">
+    <select class="coursesubject-list form-control" id="coursesubjectlist" name="coursesubjectName" style="width:230px" tabindex="1">
     <option></option>
       <% _.each(coursesubjects, function(coursesubject) { %>
       <option value="<%=coursesubject.departmentid.id%>" id="<%=coursesubject.id%>"><%=coursesubject.coursesubjectName%></option>
@@ -83,7 +83,7 @@
   </div>
 
   <div class="col-md-3">
-		<select class="course-list form-control" id="courselist" name="courseName" style="width:185px" tabindex="1">
+		<select class="course-list form-control" id="courselist" name="courseName" style="width:230px" tabindex="1">
 		<option></option>
    
 		</select>
