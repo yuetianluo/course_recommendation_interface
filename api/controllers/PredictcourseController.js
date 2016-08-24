@@ -21,17 +21,19 @@ module.exports = {
      search:function(req,res){
      	var PythonShell = require('python-shell');
 
-			var options = {
-			  mode: 'text',
-			  scriptPath: 'path/to/my/scripts',
-			  args: ['value1', 'value2', 'value3']
-			};
+      //wait for development
+      res.redirect('/');
+			// var options = {
+			//   mode: 'text',
+			//   scriptPath: 'path/to/my/scripts',
+			//   args: ['value1', 'value2', 'value3']
+			// };
 
-			PythonShell.run('my_script.py', options, function (err, results) {
-			  if (err) throw err;
-			  // results is an array consisting of messages collected during execution
-			  console.log('results: %j', results);
-			});
+			// PythonShell.run('my_script.py', options, function (err, results) {
+			//   if (err) throw err;
+			//   // results is an array consisting of messages collected during execution
+			//   console.log('results: %j', results);
+			// });
 		},
     filterbydepartment:function(req,res){
       var departmentid=req.param('departmentid');
