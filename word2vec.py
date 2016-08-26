@@ -16,7 +16,7 @@ try:
 except KeyError as e:
 	print('Sorry, there is not sufficient records about this course, so we can not give you recommendation with strong confidence')
 finally:
-	error="there is some error"
+	pass
 
 
 	
