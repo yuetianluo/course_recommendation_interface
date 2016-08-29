@@ -13,7 +13,7 @@ module.exports = {
     if (req.session.authenticated) {
       req.session.user = null;
       req.session.authenticated = false;
-      return res.redirect('/signin');
+      return res.redirect(AuthService.logoutRoute());
     } else {
       return res.redirect('/');
     }

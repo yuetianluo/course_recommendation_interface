@@ -5,7 +5,7 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 var bcrypt=require('bcrypt'); //
-
+var settings = sails.config;
 module.exports = {
 	'signin':function(req,res){
 		req.session.lastPage = 'signin';
@@ -27,6 +27,7 @@ module.exports = {
       //var params = req.params.all();//!!!it is not safe in this way
      // sails.log.debug(req.session.uid);
         var userObj={
+          id:req.session.uid,
           firstName:req.param('firstName'),
           lastName:req.param('lastName'),
           email:req.param('email'),
@@ -101,41 +102,52 @@ module.exports = {
 			res.redirect('/user/show/'+req.param('id'));
 		})
   	},
+    dev_login: function(req,res,next){
+      if(req.session.lastPage != 'signin')
+      {
+        return res.redirect('/signin')
+      }
+      else{
+        if(!req.param('email') || !req.param('password')){
+        FlashService.error(req,'Please enter your email and password');
+        return res.redirect('/signin');
+        //here i forget to return
+        }else{
+        User.findOneByEmail(req.param('email'),function(err,user){
+          if(err) return next(err);
+          if(!user) {
+            FlashService.error(req,'This account does not exists!');
+            return res.redirect('/signin');
+          }else{
+            bcrypt.compare(req.param('password'),user.encryptedPassword,function(err,valid){//it return two parameters
+              if(err) return next(err);
+              if(!valid){
+                FlashService.error(req,'Your password is not correct!')
+                res.redirect('/signin');
+              }else{
+                FlashService.success(req, 'Bypassed login!');
+                SessionService.createSession(req, user);
+                if(req.session.user.admin){res.redirect('/admin/manage_users')}else{
+                res.redirect('/dashboard/display/'+user.id);//we want to store user's information in the session
+                  };
+               }
+              })
+            }
+          })
+        }
+      }
+    },
+
   	login:function(req,res,next){
-  		if(req.session.lastPage != 'signin')
-  		{
-  			return res.redirect('/signin')
-  		}
-  		else{
-  			if(!req.param('email') || !req.param('password')){
-			FlashService.error(req,'Please enter your email and password');
-			return res.redirect('/signin');
-			//here i forget to return
-		}else{
-				User.findOneByEmail(req.param('email'),function(err,user){
-					if(err) return next(err);
-					if(!user) {
-						FlashService.error(req,'This account does not exists!');
-						return res.redirect('/signin');
-					}else{
-						bcrypt.compare(req.param('password'),user.encryptedPassword,function(err,valid){//it return two parameters
-							if(err) return next(err);
-							if(!valid){
-								FlashService.error(req,'Your password is not correct!')
-								res.redirect('/signin');
-							}else{
-								FlashService.success(req, 'Bypassed login!');
-								SessionService.createSession(req, user);
-								if(req.session.user.admin){res.redirect('/admin/manage_users')}else{
-								res.redirect('/dashboard/display/'+user.id);//we want to store user's information in the session
-							    };
-							}
-						})
-					}
-				})
-			}
-  		}
+  	if (settings.env != 'production'&& settings.bypassLogin) { 
+        res.redirect('/signin')
+    }
+  else{
+    if (req.session.authenticated) return res.redirect('/dashboard');
+    return res.redirect(AuthService.loginRoute({}));
+    }
 	},
+
 	logout:function(req,res){
 		return SessionService.destroySession(req, res);//
 	},
@@ -175,6 +187,35 @@ module.exports = {
       });
     });
   },
+    validate: function(req, res, next) {
+    var ticket = req.param('ticket');
+    var request = require('request');
+
+    // If a ticket was retrieved from CAS, process and verify it
+    if (ticket) {
+      sails.log.debug('CAS ticket issued: ' + ticket);
+      AuthService.validate(AuthService.validateRoute({ticket: ticket}), function(err, uid) {
+        sails.log.debug('User authenticating...: ' + uid);
+        // Check to see if user exists in our database
+        User.findOne({where: {id: uid}}, function foundUser(err, user) {
+          // If user already exists, continue to dashboard
+          if (user ) {  //&& user.registered
+            SessionService.createSession(req, user);
+            return res.redirect('/dashboard/display/'+user.id);
+          }
+
+          // If not, create one and go to dashboard
+          if (!user ) {  //|| !user.registered
+            req.session.uid = uid;
+            return res.redirect('/signup');
+          }
+        });
+      });
+    } else {
+      sails.log.debug('No ticket was found - redirecting to login again');
+      return res.redirect(AuthService.loginRoute({}));
+    }
+  } 
 	
 };
 

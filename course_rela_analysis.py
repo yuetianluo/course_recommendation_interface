@@ -28,25 +28,6 @@ if neg3_courseNum != '0':
 	pos.append(neg3_courseNum)
 
 
-# pos =sys.argv[1:4]
-# neg = sys.argv[4:7]
-# # print (pos2_courseNum)
-# # print (pos1_courseNum)
-# # print (pos)
-
-# index = 0
-# for pos_course in pos:
-# 	if pos_course == '0':
-# 		pos.pop(index)
-# 	index = index +1
-
-# index = 0
-# for neg_course in neg:
-# 	if neg_course == '0':
-# 		neg.pop(index)
-# 	index = index +1
-
-# print (neg)
 model = gensim.models.Word2Vec.load('course_word2vec')
 x=[];
 try:

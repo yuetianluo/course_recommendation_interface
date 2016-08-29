@@ -104,7 +104,7 @@
 
             <!-- Login button -->
             <% if (!session.authenticated) { %>
-              <li><a class="btn btn-default btn-sm navbar-btn" href="/signin">Login</a></li>
+              <li><a class="btn btn-default btn-sm navbar-btn" href="/user/login">CAS-Login</a></li>
               <li><a class="btn btn-default btn-sm navbar-btn" href="/signup">Sign up</a></li>
             <% } %>
             
@@ -150,8 +150,13 @@
       <hr>
       <footer class="footer">
         <div class="pull-left">
-          <p>Find a bug? Report it <a href="/contact">here</a>!</p>
-        </div>
+          <p>None-CAS login <a href="/signin">here</a>!</p>
+          <p class= 'text.center'>Find a bug? Report it <a href="/contact">here</a>!</p>
+        </div> 
+<!--         <br>
+        <div class="pull">
+          <p class= 'text.center'>Find a bug? Report it <a href="/contact">here</a>!</p>
+        </div>   -->  
         <div class="pull-right">
           <div> <a href="/tos">Terms of Use</a> - <a href="/privacy">Privacy Policy</a> - <a href="/contact">Contact</a></div>
         </div>
