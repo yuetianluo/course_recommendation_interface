@@ -2,6 +2,8 @@ from keras.models import load_model
 from collections import OrderedDict
 import json
 import numpy as np
+import sys
+
 MAX_SEM = 21
 MAX_COURSE = 13
 COURSE_NUM = 9038
