@@ -19,11 +19,16 @@
 		<div class="col-md-6">
 		<select name="department" class="department-list form-control" id="departmentlist" style="width:400px">
 			<option></option>
-			<option value="Not specified">Not specified</option>
 	        <% _.each(departments, function(department) { %>
 	        <option value="<%=department.id%>"><%=department.departmentName%></option>
 	        <%})%>
-		</select>		
+		</select>	
+    <br>
+    <br>
+    <input type='text' name="ppsk" id='ppsk' placeholder="Please enter a ppsk here" size='30'>	<p>7 digits, example:2426080, 2425472</p>
+    <br>
+    <br>
+    <input type="submit" class="btn btn-md btn-success " id='nextcoursesubmit' style="width:400px" value="Please click here to find suitable courses for you!">
 	</div>
 
 	<div class="col-md-6">
@@ -40,12 +45,10 @@
       <option value="<%=coursesubject.departmentid.id%>"><%=coursesubject.coursesubjectName%></option>
       <%})%>
     </select> 
+
     </div>
     <br>
     <br>
-    <div class="col-md-6">
-    	<input type="submit" class="btn btn-md btn-success " style="width:400px" value="Please click here to find suitable courses for you!">
-    </div>
 	</form>
   <br>
   <br>
@@ -67,6 +70,32 @@
   </div>
 </div>	
 </div>
+
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $("#nextcoursesubmit").click(function(){
+      var ppsk=$("#ppsk").val();
+      $.ajax({
+        url:'/nextcourse/predict',
+        type:'POST',
+        data:{
+          ppsk:ppsk  //be careful there is no punctuation
+        },
+        success:function(response){
+          //console.log(response);//you can use this method to see data you pass to browser
+          var trHTML = "<table class='table table-striped table-hover' id='course-table'><thead><tr><th>Taking Order</th><th>Course ID</th><th>Course Name</th><th>Course Subject</th><th>Department </th><th>Mininum requirement</th></tr></thead><tbody>";
+          //the following part need to be changed
+          $.each(response, function (i, item) {
+            trHTML += '<tr><td>' + item.id + '</td><td>' + item.courseName + '</td><td>' + item.coursesubjectid.coursesubjectName + '</td><td>'+item.departmentid.departmentName+'</td></tr>';
+          });
+          trHTML +="</tbody></table>"
+          $('#addtable').append(trHTML);
+        }
+      })
+    });
+  });
+</script>
 
 
   <script type="text/javascript">

@@ -18,23 +18,44 @@ module.exports = {
      					 })
      		})
      	},	
-     search:function(req,res){
+     predict:function(req,res){
      	var PythonShell = require('python-shell');
-
-     	// wait for development
+          var ppsk = req.param('ppsk');
      	res.redirect('/');
-			// var options = {
-			//   mode: 'text',
-			//   scriptPath: 'path/to/my/scripts',
-			//   args: ['value1', 'value2', 'value3']
-			// };
+		var options = {
+		  args: [ppsk]
+		};
 
-			// PythonShell.run('my_script.py', options, function (err, results) {
-			//   if (err) throw err;
-			//   // results is an array consisting of messages collected during execution
-			//   console.log('results: %j', results);
-			// });
-		},
+		PythonShell.run('course_predict.py', options, function (err, results) {
+		  if (err) throw err;
+		  // results is an array consisting of messages collected during execution
+               console.log(results)
+               len = results.length
+               Course.find({id:results})
+               .populate('departmentid',{
+               })
+                 .populate('coursesubjectid',{
+                 })
+                 .exec(function(err,courses){
+                     index=0;
+                     for (var i=0; i<len;i++){
+                       for (var j=0; j<len; j++)
+                       {
+                         if(courses[i].id==results[j])
+                         {
+                           courses[i].rank=j;
+                         }
+                       }
+                     }
+                     var courses2 = courses.slice(0);
+                     courses2.sort(function(a,b) {
+                     return b.rank-a.rank;
+                     });
+                     //console.log(courses2);
+                     return res.ok(courses2);
+                 });
+		});
+	},
 	
 };
 
