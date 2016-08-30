@@ -40,7 +40,7 @@ MAX_COURSE = 13
 COURSE_NUM = 9038
 enrolljson_dir = 'student_grade_data.json'
 ppsk = sys.argv[1]
-model = load_model('model_three.h5')
+
 
 enrollment_dict = OrderedDict({}) # ppsk and semester are strings, courses are numbers
 
@@ -109,31 +109,35 @@ def getSemesterSegDataset(max_semester=0, max_course=0):
         x_eval_matrix[0][i] = generateVector(x_eval_list[i], init_course_num)
     eval_input = multiHotRepresentation(x_eval_matrix)
     return eval_input, x_eval_list
+try:
+	student_dict = enrollment_dict[ppsk]
+	model = load_model('model_three.h5')
+	eval_input, x_eval_list = getSemesterSegDataset(max_semester=12, max_course=0)
 
-eval_input, x_eval_list = getSemesterSegDataset(max_semester=12, max_course=0)
+	res = model.predict(eval_input)
+	res = res[0]
 
-res = model.predict(eval_input)
-res = res[0]
+	index = firstZeroIndex(eval_input[0, :, :])
+	top_k_classes = np.argsort(-res[0, index, :])[0:100]
+	top_k_classes += 1
+	top_k_classes = list(top_k_classes)
 
-index = firstZeroIndex(eval_input[0, :, :])
-top_k_classes = np.argsort(-res[0, index, :])[0:100]
-top_k_classes += 1
-top_k_classes = list(top_k_classes)
-
-total_semester = []
-for semester in x_eval_list:
-	total_semester = total_semester + semester
-i = 0
-for courseNum in top_k_classes:
-	if not courseNum in total_semester:
-		print (str(courseNum))
-		i = i + 1
-		if i > 5:
-			break
-new_total_semester = set(total_semester)
-new_total_semester = list(new_total_semester)
-for course in new_total_semester:
-	print (str(course))
+	total_semester = []
+	for semester in x_eval_list:
+		total_semester = total_semester + semester
+	i = 0
+	for courseNum in top_k_classes:
+		if not courseNum in total_semester:
+			print (str(courseNum))
+			i = i + 1
+			if i > 5:
+				break
+	new_total_semester = set(total_semester)
+	new_total_semester = list(new_total_semester)
+	for course in new_total_semester:
+		print (str(course))
+except KeyError:
+	print ('Sorry, this ppsk does not exist')
 
 
 

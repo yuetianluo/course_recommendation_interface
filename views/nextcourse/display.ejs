@@ -96,6 +96,16 @@
           trHTML2 +="</tbody></table>"
           $('#addtable').append(trHTML);
           $('#coursehistory').append(trHTML2);
+        },
+        failure:function(msg){
+          $('#addtable').append('<div class="alert alert-danger" id="courseerror"><h3>'+msg+'</h3></div>')
+        },
+        error:function(jqXHR, textStatus,errorMessage){
+        $('#course-table').remove();
+          $('#course-table2').remove();
+          $('#title').remove();
+          $('#title2').remove();
+        $('#addtable').append('<div class="alert alert-danger" id="course-table"><h3>Sorry, This ppsk does not exist!</h3></div>')
         }
       })
     });

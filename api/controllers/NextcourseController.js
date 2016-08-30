@@ -28,7 +28,13 @@ module.exports = {
 		PythonShell.run('course_predict.py', options, function (err, results) {
 		  if (err) throw err;
 		  // results is an array consisting of messages collected during execution
-               len = results.length  
+          if(results.length<=1)
+             {
+               console.log(results)
+               FlashService.error(req, results)
+               return res.badRequest('Sorry, this ppsk does not exist')        
+             } else{
+                              len = results.length  
                console.log(results)
                Course.find({where:{id:results},limit:100})
                .populate('departmentid',{
@@ -36,10 +42,10 @@ module.exports = {
                  .populate('coursesubjectid',{
                  })
                  .exec(function(err,courses){
-                    console.log(courses)
+                    //console.log(courses)
                      index=0;
                      for (var i=0; i<len ;i++){
-                       console.log(courses[i].id)
+                       //console.log(courses[i].id)
                        for (var j=0; j<len ; j++)
                        {
                          if(courses[i]['id'] == results[j])
@@ -55,6 +61,8 @@ module.exports = {
                      //console.log(courses2);
                      return res.ok(courses2);
                  });
+             }
+
 		});
 	},
 	
