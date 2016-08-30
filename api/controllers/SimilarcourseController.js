@@ -24,7 +24,7 @@ module.exports = {
       console.log(courseid)
       //sails.log.debug(courseid);
 			var options = {
-			  args: [courseid]
+			  args: [courseid]//
 			};
 			PythonShell.run('word2vec.py', options, function (err, results) {
 			  if (err) throw err;

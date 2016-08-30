@@ -21,7 +21,6 @@ module.exports = {
      predict:function(req,res){
      	var PythonShell = require('python-shell');
           var ppsk = req.param('ppsk');
-     	res.redirect('/');
 		var options = {
 		  args: [ppsk]
 		};
@@ -29,27 +28,28 @@ module.exports = {
 		PythonShell.run('course_predict.py', options, function (err, results) {
 		  if (err) throw err;
 		  // results is an array consisting of messages collected during execution
-               console.log(results)
-               len = results.length
-               Course.find({id:results})
+               len = results.length  
+               Course.find({where:{id:results},limit:100})
                .populate('departmentid',{
                })
                  .populate('coursesubjectid',{
                  })
                  .exec(function(err,courses){
+                    console.log(courses)
                      index=0;
-                     for (var i=0; i<len;i++){
-                       for (var j=0; j<len; j++)
+                     for (var i=0; i<len ;i++){
+                       console.log(courses[i].id)
+                       for (var j=0; j<len ; j++)
                        {
-                         if(courses[i].id==results[j])
+                         if(courses[i]['id'] == results[j])
                          {
                            courses[i].rank=j;
                          }
                        }
-                     }
+                     };
                      var courses2 = courses.slice(0);
                      courses2.sort(function(a,b) {
-                     return b.rank-a.rank;
+                     return a.rank-b.rank;
                      });
                      //console.log(courses2);
                      return res.ok(courses2);

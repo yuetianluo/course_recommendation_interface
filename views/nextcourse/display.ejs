@@ -28,9 +28,7 @@
     <input type='text' name="ppsk" id='ppsk' placeholder="Please enter a ppsk here" size='30'>	
     <br>
     <p>7 digits, example:2426080, 2425472</p>
-    <br>
-    <br>
-    <input class="btn btn-md btn-success " id='nextcoursesubmit' style="width:400px" value="Please click here to find suitable courses for you!">
+    
 	</div>
 
 	<div class="col-md-6">
@@ -40,25 +38,30 @@
       <option value="<%=coursesubject.departmentid.id%>"><%=coursesubject.coursesubjectName%></option>
       <%})%>
     </select>
-
+    <br>
+    <br>
+    <input class="btn btn-md btn-success " id='nextcoursesubmit' style="width:400px" value="Please click here to find suitable courses for you!">
+  </div>
     <select class="coursesubject-list form-control hidden" id="coursesubjectlist2" name="coursesubjectName" style="width:400px" >
     <option></option><!--hidden select bar, so that you can choose it again-->
     <% _.each(coursesubjects, function(coursesubject) { %>
       <option value="<%=coursesubject.departmentid.id%>"><%=coursesubject.coursesubjectName%></option>
       <%})%>
     </select> 
-
-    </div>
-    <br>
-    <br>
+    
 	</form>
   <br>
   <br>
-  <br>
-  <div id=addtable>
-
+</div>    
+<div id='addtable'>
+  <!--ajax add table-->
   </div>
-</div>	
+  <br>
+  <br>
+  <div id= "coursehistory">
+    
+  </div>
+
 </div>
 
 
@@ -73,14 +76,26 @@
           ppsk:ppsk  //be careful there is no punctuation
         },
         success:function(response){
+          $('#course-table').remove();
+          $('#course-table2').remove();
+          $('#title').remove();
+          $('#title2').remove();
           //console.log(response);//you can use this method to see data you pass to browser
-          var trHTML = "<table class='table table-striped table-hover' id='course-table'><thead><tr><th>Course ID</th><th>Course Name</th><th>Course Subject</th><th>Department </th></tr></thead><tbody>";
+          var trHTML = "<h3 id='title'>Our Recommendation is:</h3><table class='table table-striped table-hover' id='course-table'><thead><tr><th>Course ID</th><th>Course Name</th><th>Course Subject</th><th>Department </th></tr></thead><tbody>";
+          var trHTML2 = "<h3 id='title2'>His/Her course history is:</h3><table class='table table-striped table-hover' id='course-table2'><thead><tr><th>Course ID</th><th>Course Name</th><th>Course Subject</th><th>Department </th></tr></thead><tbody>";
           //the following part need to be changed
           $.each(response, function (i, item) {
-            trHTML += '<tr><td>' + item.id + '</td><td>' + item.courseName + '</td><td>' + item.coursesubjectid.coursesubjectName + '</td><td>'+item.departmentid.departmentName+'</td></tr>';
+            if (i < 6) {
+              trHTML += '<tr><td>' + item.id + '</td><td>' + item.courseName + '</td><td>' + item.coursesubjectid.coursesubjectName + '</td><td>'+item.departmentid.departmentName+'</td></tr>';
+            } else{
+              trHTML2 += '<tr><td>' + item.id + '</td><td>' + item.courseName + '</td><td>' + item.coursesubjectid.coursesubjectName + '</td><td>'+item.departmentid.departmentName+'</td></tr>';
+            }
+            
           });
           trHTML +="</tbody></table>"
+          trHTML2 +="</tbody></table>"
           $('#addtable').append(trHTML);
+          $('#coursehistory').append(trHTML2);
         }
       })
     });
