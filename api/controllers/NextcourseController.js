@@ -29,6 +29,7 @@ module.exports = {
 		  if (err) throw err;
 		  // results is an array consisting of messages collected during execution
                len = results.length  
+               console.log(results)
                Course.find({where:{id:results},limit:100})
                .populate('departmentid',{
                })
