@@ -31,7 +31,7 @@
 
 <div class="mini-banner auto">
 	<div class="container">
-		<h2>Investigate course relationship</h2>
+		<h2>Investigating course analogies here!</h2>
 	</div>
 </div>
 
@@ -39,7 +39,14 @@
   <div class="container">
     <h2>Investigate interesting course relationships here! </h2>
     <h4>
-      You can choose up to three positive courses, "posi_course1","posi_course2","posi_course3" and you can choose up to three nagetive courses, "nega_course1","nega_course2","nega_course3", we will help you to find the most similar courses after doing a simple arithmatic calculation: posi_course1+posi_course2+posi_course3-nega_course1-nega_course2-nega_course3
+<!--       You can choose up to three positive courses, "posi_course1","posi_course2","posi_course3" and you can choose up to three nagetive courses, "nega_course1","nega_course2","nega_course3", we will help you to find the most similar courses after doing a simple arithmatic calculation: posi_course1+posi_course2+posi_course3-nega_course1-nega_course2-nega_course3
+      Example: 
+      <br> -->
+<!--       (1) ECON101B(math version) - ECON(100B)(less math version) roughly equals to Statistics(201A) Intro to Probability
+      <br>
+      (2) ECON101A(math version) - ECON(100A)(less math version) roughly equals to Statistics(201A) Intro to Probability
+      <br> -->
+      Example: ECON 101B - ECON 101A + ECON 100A roughly equals to ECON 100B // Mathematical versions vs. less mathematical versions
     </h4>
   </div>
 </div>
@@ -183,7 +190,7 @@
   </div>
   <br>
 <!--***********************************Negative course1*****************************************-->
-  <div class="row">
+<div class="row">
 <h3>Please choose up to three negative courses</h3>
   <div class="col-md-3">
     <select name="departmentid" class="department-list form-control" id="departmentlist_4" tabindex="1">
@@ -314,7 +321,7 @@
     </select>  
   </div>
     <div class="pull-right">
-    <input type="button" value="Submit", id="coursesubmit" style="width:100px;background-color: #4CAF50;color:white" onclick="this.style.color='#000000'; this.style.backgroundColor = '#ffffff'" tabindex="1">
+    <input class="btn btn-md btn-primary" value="Submit", id="coursesubmit" tabindex="1">
       <input type="hidden" name="_csrf" value="<%= _csrf %>" />
     </div>
   </div>
@@ -322,7 +329,6 @@
   <br>
 
   <div id=addtable>
-  <!--ajax add table-->
   </div>
 
 </div>
@@ -339,10 +345,10 @@
       var neg2_courseid=$("#courselist_5").val();
       var neg3_courseid=$("#courselist_6").val();
       $.ajax({
-        url:'/similarcourse/course_rela_analysis',
+        url:'http://maxwell.ischool.berkeley.edu:1331/similarcourse/course_rela_analysis',
         type:'POST',
         data:{
-          pos1_courseid:pos1_courseid,  //be careful there is no punctuation
+          pos1_courseid:pos1_courseid,  
           pos2_courseid:pos2_courseid,
           pos3_courseid:pos3_courseid,
           neg1_courseid:neg1_courseid,
@@ -350,15 +356,33 @@
           neg3_courseid:neg3_courseid
         },
         success:function(response){
-          $('#course-table').remove();
-          $('#title').remove();
-          //console.log(response);//you can use this method to see data you pass to browser
-          var trHTML = "<h3 id='title'>Top 10 similar courses</h3><table class='table table-striped table-hover' id='course-table'><thead><tr><th>Course ID</th><th>Course Name</th><th>Course Subject</th><th>Department </th><th>Cosine Similarity</th></tr></thead><tbody>";
-          $.each(response, function (i, item) {
-            trHTML += '<tr><td>' + item.id + '</td><td>' + item.courseName+'</td><td>' + item.coursesubjectid.coursesubjectName+'</td><td>' + item.departmentid.departmentName + '</td><td>'+item.cosinesimilarity+'</td></tr>';
-          });
-          trHTML +="</tbody></table>"
-          $('#addtable').append(trHTML);
+          //alert(response)
+          var response = JSON.parse(response)
+          $.ajax({
+            url: '/similarcourse/course_rela_analysis',
+            type: 'POST',
+            data:{
+              data: response.result
+            },
+            success: function(response2){
+              $('#course-table').remove();
+              $('#title').remove();
+              //console.log(response);//you can use this method to see data you pass to browser
+              var trHTML = "<h3 id='title'>Top 10 results are:</h3><table class='table table-striped table-hover' id='course-table'><thead><tr><th>Course ID</th><th>Course Name</th><th>Course Subject</th><th>Department </th><th>Cosine Similarity</th></tr></thead><tbody>";
+              $.each(response2, function (i, item) {
+                trHTML += '<tr><td>' + item.id + '</td><td>' + item.courseName+'</td><td>' + item.coursesubjectid.coursesubjectName+'</td><td>' + item.departmentid.departmentName + '</td><td>'+item.cosinesimilarity+'</td></tr>';
+              });
+              trHTML +="</tbody></table>"
+              $('#addtable').append(trHTML);
+              },
+              failure:function(msg){
+                $('#addtable').append('<div class="alert alert-danger" id="courseerror"><h3>'+msg+'</h3></div>')
+              },
+              error:function(jqXHR, textStatus,errorMessage){
+              $('#course-table').remove();
+              $('#addtable').append('<div class="alert alert-danger" id="course-table"><h3>Sorry, there is not sufficient records on this course, so we can not recommend you similar courses with strong confidence</h3></div>')
+              }
+          })
         },
         failure:function(msg){
           $('#addtable').append('<div class="alert alert-danger" id="courseerror"><h3>'+msg+'</h3></div>')

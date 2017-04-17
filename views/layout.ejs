@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>mooocCR-<%-title%></title>
+    <title>Ask Oski</title>
 
     <!-- Viewport mobile tag for sensible mobile support -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" charset="utf-8">
@@ -42,7 +42,7 @@
     <!-- PRELOAD SCRIPTS -->
     <script src="/js/dependencies/sails.io.js"></script>
     <script src="/js/jquery-1.11.0.min.js"></script><!--!!!!in order to let the carousel-->
-
+    <script src="/js/jquery.ajax-cross-origin.min.js"></script>
     <!-- FONTS --> 
     <link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
@@ -59,15 +59,15 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="/"><img src="/images/favicon.png" class='img-responsive'> moocCR</a>
+          <a class="navbar-brand" href="/"><img src="/images/bear.png" class='img-responsive'>AskOski</a>
         </div>
 
         <ul class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
           <% if (session.authenticated) { %><!---->
-              <li><a id="Dashboard" class="navbar-button" href="/similarcourse/display/">Analysis 1</a></li>
-              <li><a id="Dashboard" class="navbar-button" href="/nextcourse/display/<%=session.user.id%>">Recommendation</a></li>
-              <li><a id="Dashboard" class="navbar-button" href="/predictcourse/display/<%=session.user.id%>">Analysis 3</a></li>
+              <li><a id="Dashboard" class="navbar-button" href="/similarcourse/display/">Alternatives</a></li>
+              <li><a id="Dashboard" class="navbar-button" href="/nextcourse/display/<%=session.user.id%>">Suggestions</a></li>
+              <!-- <li><a id="Dashboard" class="navbar-button" href="/predictcourse/display/<%=session.user.id%>">Goals</a></li> -->
               <!--this is the way to write href in html!!!-->
         
               <% if (session.user && session.user.admin) { %>
@@ -97,14 +97,14 @@
           <ul class="nav navbar-nav navbar-right">
             <% if (session.authenticated) { %>
             <!-- Logout button -->
-              <li><p class="navbar-text">Hello <a href="/user/edit/<%= session.user.id %>"><font color="#5cb85c"><%= session.user.firstName %> <%= session.user.lastName %></font></a></p></li>
+              <li><p class="navbar-text">Hello <a href="/user/edit/<%= session.user.id %>" id = "name"><font color="rgb(14,75,113)"><%= session.user.firstName %> <%= session.user.lastName %></font></a></p></li>
               <li><a class="btn btn-default btn-sm navbar-btn" href="/" onclick="window.open('/logout')">Logout</a></li>
               <li><a class="btn btn-default btn-sm navbar-btn" href="/user/show/<%= session.user.id %>">Profile</a></li>
             <% } %>
 
             <!-- Login button -->
             <% if (!session.authenticated) { %>
-              <li><a class="btn btn-default btn-sm navbar-btn" href="/user/login">CAS-Login</a></li>
+              <li><a class="btn btn-default btn-sm navbar-btn" href="/user/login">CalNet Login</a></li>
               <li><a class="btn btn-default btn-sm navbar-btn" href="/signup">Sign up</a></li>
             <% } %>
             
@@ -150,7 +150,9 @@
       <hr>
       <footer class="footer">
         <div class="pull-left">
-          <p>None-CAS login <a href="/signin">here</a>!</p>
+        <% if (!session.authenticated) { %>
+          <p>Non CalNet login <a href="/signin">here</a>!</p>
+        <% } %>
           <p class= 'text.center'>Find a bug? Report it <a href="/contact">here</a>!</p>
         </div> 
 <!--         <br>
@@ -162,7 +164,7 @@
         </div>
         <br>
         <div class="pull-right">
-          <div>&copy; 2016 moocCR. Built on <a href="http://sailsjs.com/">Sails.js</a></div>
+          <div>&copy; 2016 AskOski. Built on <a href="http://sailsjs.com/">Sails.js</a></div>
         </div>
       </footer>
     </div>

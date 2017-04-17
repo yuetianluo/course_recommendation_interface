@@ -6,26 +6,27 @@
  */
 
 module.exports = {
-
 schema: true,
 
-  attributes: {  	
+  attributes: {  	 
   	/* e.g.
   	nickname: 'string'
   	*/
-    
+    id: {
+      tyep: 'NUMBER', 
+    },
     // Instance variables
     firstName: {
       type: 'STRING',
-      required: true
+      //required: true
     },
     lastName: {
       type: 'STRING',
-      required: true
+      //required: true
     },
     email: {
-    	type: 'EMAIL',
-      unique: true
+    	type: 'STRING',
+      unique: false
     },
     /*
     registered: {
@@ -39,14 +40,14 @@ schema: true,
     encryptedPassword:{
     	type:'STRING'
     },
-    /*publicKey: {
-      type: 'TEXT',
-      required: true
+    cas_login:{
+      type:'BOOLEAN',
+      defaultsTo:true
     },
-    publicKeyID: {
-      type: 'STRING',
-      required: true
+    majorid:{
+      model:'major'
     },
+    /*
     requests: {
       collection: 'request',
       via: 'requestingUser'
@@ -91,6 +92,9 @@ schema: true,
       }    //!!!!!!!here we first do not require a berkeley email
       return next();
     });*/
+    if (values.cas_login == true){
+      return next();
+    }//
     if(!values.password||values.password!=values.comfirmation){
       return next({err:("Password doesn't match password confirmation.")});
     };

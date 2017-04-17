@@ -6,7 +6,7 @@ import gensim, logging
 
 courseNum=str(sys.argv[1])
 model = gensim.models.Word2Vec.load('course_word2vec')
-x=[];
+x=[]
 try:
 	aimingcourse=model.similar_by_word(courseNum)
 	for course in aimingcourse:

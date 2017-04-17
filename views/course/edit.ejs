@@ -44,7 +44,7 @@
       <option value="<%=department.id%>"><%=department.departmentName%></option>
       <%}%>
       <%})%>
-    </select>
+      </select>
     </div>
     <div class="form-group">
       <select name="coursesubject" class="coursesubject-list form-control" id="coursesubjectlist">
@@ -56,7 +56,7 @@
       <%})%>
     </select>
 
-     <select class="coursesubject-list form-control hidden" id="coursesubjectlist2" name="coursesubjectName" style="width:300px" >
+    <select class="coursesubject-list form-control hidden" id="coursesubjectlist2" name="coursesubjectName" style="width:300px" >
     <option></option><!--hidden select bar, so that you can choose it again-->
     <% _.each(coursesubjects, function(coursesubject) { %>
       <option value="<%=coursesubject.departmentid.id%>"><%=coursesubject.coursesubjectName%></option>

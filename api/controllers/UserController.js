@@ -4,7 +4,7 @@
  * @description :: Server-side logic for managing users
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
-var bcrypt=require('bcrypt'); //
+var bcrypt=require('bcrypt'); 
 var settings = sails.config;
 module.exports = {
 	'signin':function(req,res){
@@ -18,7 +18,7 @@ module.exports = {
 		res.view({
 			title:'Register'
 		});
-	},
+	},//
 	create: function(req, res, next) {
     // To prevent users from directly accessing this page through the URL
     if (req.session.lastPage != 'signup') {
@@ -32,7 +32,9 @@ module.exports = {
           lastName:req.param('lastName'),
           email:req.param('email'),
           password:req.param('password'),
-          comfirmation:req.param('comfirmation')
+          comfirmation:req.param('comfirmation'),
+          cas_login: false,
+          admin: false
         };
     //  params['registered'] = true;
       User.findOneByEmail({email:userObj.email},function(err,user){
@@ -44,22 +46,10 @@ module.exports = {
           sails.log.debug('Error occurred: ' + err);
           FlashService.error(req, "Please fill in all fields and make sure your email address is correct");
           return res.redirect('/signup');
-        } /*else {
-          EncryptionService.importPublicKey(user, function(success) {
-            if (!success) {
-              User.destroy(user.id, function(err) {
-                FlashService.error(req, "Invalid GPG key - please enter a valid GPG key/id pair.");
-                return res.redirect('/signup');
-              });
-            } else {
-              SessionService.createSession(req, user);
-              return res.redirect('/dashboard');
-            }
-          });
-        }*/
+        } 
         else{
         	SessionService.createSession(req,user);
-        	return res.redirect('/dashboard/display/'+user.id);//!!!!!!!!be remember the route format!!! you need to do it by yourself
+        	return res.redirect('/similarcourse/display');//!!!!!!!!be remember the route format!!! you need to do it by yourself
         }
       });
       	}
@@ -67,7 +57,9 @@ module.exports = {
     }
   },
 	show:function(req,res){
-		User.findOne(req.param('id'),function(err,user){
+		User.findOne(req.param('id'))
+        .populate("majorid")
+        .exec(function(err,user){
 			if(err) sails.log.debug(err);
 			if(err || !user) return res.redirect('404');
 			return res.view({
@@ -82,20 +74,26 @@ module.exports = {
       sails.log.error("Attempt to access administrative action by " + req.session.user.id);
       return res.redirect('/user/edit/' + req.session.user.id);
     } else {
-      User.findOne(req.param('id'), function (err, user) {
-        if (err) sails.log.debug(err);
-        if (err || !user) return res.redirect('404');
-        
-        return res.view({ user: user, title: 'Edit' });
+      User.findOne(req.param('id'))
+          .populate('majorid')
+          .exec(function (err, user) {
+            Major.find({sort:'majorName ASC'})
+                  .exec(function(err, majors){
+              if (err) sails.log.debug(err);
+              if (err || !user) return res.redirect('404');
+              sails.log.debug(user.majorid)
+              return res.view({ user: user, title: 'Edit',majors:majors });
+        })
       });
     }
   },
   	update:function(req,res,next){
-  		User.update({id:req.param('id')},{email:req.param('email')},function(err,user){
+  		User.update({id:req.param('id')},{email:req.param('email'),firstName:req.param('firstName'),lastName:req.param('lastName'), majorid:req.param("majorid")},function(err,user){
 			if(err){
 				sails.log.debug(err);
-				sails.log.debug(req.param('id'));
+				sails.log.debug(req.param('majorid'));
 				sails.log.debug(req.params.all());
+        FlashService.error(req, 'Sorry, this email has been taken');
 				return res.redirect('/user/edit/'+req.param('id'));//it can not be /user/edit/req.param('id')
 			};
 			FlashService.success(req, 'Successfully updated user profile');
@@ -128,7 +126,7 @@ module.exports = {
                 FlashService.success(req, 'Bypassed login!');
                 SessionService.createSession(req, user);
                 if(req.session.user.admin){res.redirect('/admin/manage_users')}else{
-                res.redirect('/dashboard/display/'+user.id);//we want to store user's information in the session
+                res.redirect('/similarcourse/display/');//we want to store user's information in the session
                   };
                }
               })
@@ -149,14 +147,19 @@ module.exports = {
 	},
 
 	logout:function(req,res){
-		return SessionService.destroySession(req, res);//
+    if (req.session.user.cas_login == true){
+      return SessionService.destroySession(req, res);
+    }else{
+      req.session.user = null;
+      req.session.authenticated = false;
+      return res.redirect('/');
+    } 
 	},
 	// Delete a user
 	destroy: function(req, res, next) {
     User.findOne(req.param('id'), function (err, user) {
       if (err) sails.log.debug(err);
       if (err || !user) return res.redirect('404');
-
       User.destroy(req.param('id'), function userDestroyed(err,user) {
         if (err) return next(err);
       });
@@ -199,15 +202,34 @@ module.exports = {
         // Check to see if user exists in our database
         User.findOne({where: {id: uid}}, function foundUser(err, user) {
           // If user already exists, continue to dashboard
-          if (user ) {  //&& user.registered
+          if (user) {  //&& user.registered
             SessionService.createSession(req, user);
-            return res.redirect('/dashboard/display/'+user.id);
+            sails.log(user)
+            return res.redirect('/similarcourse/display');
           }
 
           // If not, create one and go to dashboard
           if (!user ) {  //|| !user.registered
-            req.session.uid = uid;
-            return res.redirect('/signup');
+          var user={
+          id:uid,
+          firstName:'your_firstName',
+          lastName:'your_lastName',
+          email:'your_email'+uid+'@berkeley.edu',
+          cas_login:true,
+          majorid:0,
+          admin: false
+          };
+          User.create(user, function userCreated(err, user) {
+          if (err) {
+            sails.log.debug('Error occurred: ' + err);
+            FlashService.error(req, "There are some errors when you login");
+            return res.redirect(AuthService.loginRoute({}));
+            } 
+          else{
+            SessionService.createSession(req,user);
+            return res.redirect('/similarcourse/display');//!!!!!!!!be remember the route format!!! you need to do it by yourself
+            }
+          });
           }
         });
       });
@@ -215,6 +237,9 @@ module.exports = {
       sails.log.debug('No ticket was found - redirecting to login again');
       return res.redirect(AuthService.loginRoute({}));
     }
+  },
+  getpaper: function(req,res,next){
+    res.sendfile('../assets/askOski.pdf');
   } 
 	
 };

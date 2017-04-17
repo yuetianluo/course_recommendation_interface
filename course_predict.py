@@ -38,9 +38,10 @@ import sys
 MAX_SEM = 21
 MAX_COURSE = 13
 COURSE_NUM = 9038
-enrolljson_dir = 'student_grade_data.json'
+enrolljson_dir = '/research/EDW_enrollment_2007_2016/preprocess/student_grade_data.json'
+course_dict_dir = '/research/EDW_enrollment_2007_2016/preprocess/edw_enrollment_dict.json'
 ppsk = sys.argv[1]
-model = load_model('model_three.h5')
+coursesubjectName = sys.argv[2]
 
 enrollment_dict = OrderedDict({}) # ppsk and semester are strings, courses are numbers
 
@@ -48,6 +49,9 @@ with open(enrolljson_dir, 'r') as f:
     json_string = f.read()
     enrollment_dict = json.loads(json_string, object_pairs_hook=OrderedDict)
 
+with open(course_dict_dir, 'r') as f:
+    json_string = f.read()
+    course_dict = json.loads(json_string, object_pairs_hook=OrderedDict)
 
 def generateVector(course_list, max_course):
     vector = np.zeros(max_course, dtype='int16')
@@ -110,31 +114,58 @@ def getSemesterSegDataset(max_semester=0, max_course=0):
     eval_input = multiHotRepresentation(x_eval_matrix)
     return eval_input, x_eval_list
 
-eval_input, x_eval_list = getSemesterSegDataset(max_semester=12, max_course=0)
+try:
+    student_dict = enrollment_dict[ppsk]
+    model = load_model('/home/yuetian/courseguidance_8_21/courseguidance/CoursePrediction/model_three.h5')
+    eval_input, x_eval_list = getSemesterSegDataset(max_semester=12, max_course=0)
 
-res = model.predict(eval_input)
-res = res[0]
+    res = model.predict(eval_input)
+    res = res[0]
 
-index = firstZeroIndex(eval_input[0, :, :])
-top_k_classes = np.argsort(-res[0, index, :])[0:100]
-top_k_classes += 1
-top_k_classes = list(top_k_classes)
+    index = firstZeroIndex(eval_input[0, :, :])
+    top_k_classes = np.argsort(-res[0, index, :])[0:len(course_dict)]
+    top_k_classes += 1
+    top_k_classes = list(top_k_classes)
+    total_semester = []
+    for semester in x_eval_list:
+        total_semester = total_semester + semester
+    total_semester.reverse()
+    top_k_classes = [x for x in top_k_classes if x not in total_semester]
+    top_k_pro = [course - 1 for course in top_k_classes]
+    pro = res[0, index, :][top_k_pro]
+    i = 0
+    j = 0
+    pro_list = []
+    if coursesubjectName == '0':
+        for courseNum in top_k_classes:
+            print (str(courseNum))
+            i = i + 1
+            pro_list.append(j)
+            if i > 5:
+                break
+            j = j + 1
+    else: 
+        for courseNum in top_k_classes:
+            if course_dict[str(courseNum)].split('_')[0] == coursesubjectName:
+                print (str(courseNum))
+                i = i + 1
+                pro_list.append(j)
+                if i > 5:
+                    break
+            j = j + 1
+    def f7(seq):
+        seen = set()
+        seen_add = seen.add
+        return [x for x in seq if not (x in seen or seen_add(x))]
 
-total_semester = []
-for semester in x_eval_list:
-	total_semester = total_semester + semester
-i = 0
-for courseNum in top_k_classes:
-	if not courseNum in total_semester:
-		print (str(courseNum))
-		i = i + 1
-		if i > 5:
-			break
-new_total_semester = set(total_semester)
-new_total_semester = list(new_total_semester)
-for course in new_total_semester:
-	print (str(course))
+    new_total_semester = f7(total_semester)
+    for course in new_total_semester:
+        print (str(course))
 
+    for probability in pro_list:
+        print (pro[probability])
+except KeyError:
+    print ('Sorry, this ppsk does not exist')
 
 
 

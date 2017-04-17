@@ -33,10 +33,10 @@ module.exports = {
 
     request({uri: url, secureProtocol: 'TLSv1_method' }, function(err, response, body) {
       var uid = undefined;
-
       if (!err && body) {
         var lines = body.split('\n');
         if (lines && lines[0] == 'yes') {
+          sails.log(body);
           uid = lines[1];
         }
       }

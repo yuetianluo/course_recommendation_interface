@@ -30,7 +30,7 @@ var jsFilesToInject = [
 
   // Dependencies like jQuery, or Angular are brought in here
   'js/dependencies/**/*.js',
-
+  'js/jquery.ajax-cross-origin.min.js',
   // All of the rest of your client-side js files
   // will be injected here in no particular order.
   'js/**/*.js'

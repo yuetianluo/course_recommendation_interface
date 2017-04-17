@@ -63,6 +63,10 @@ module.exports.routes = {
     controller: 'user',
     action: 'logout'
   },
+  '/getpaper':{
+    controller:'user',
+    action:'getpaper'
+  }
 
   /***************************************************************************
   *                                                                          *

@@ -47,9 +47,13 @@
   <p><b>First Name: </b> <%= user.firstName %></p>
   <p><b>Last Name: </b> <%= user.lastName %></p>
   <p><b>Email Address: </b> <%= user.email %></p>
-  <p><b>Department: </b> School of Information </p>
-  <p><b>Major: </b> Data Science </p>
-  <p><b><a href="">View My Course History </a></b></p>
+<!--   <p><b>Department: </b> School of Information </p> -->
+  <% if (user.majorid == undefined) {%>
+    <p><b>Major: </b> You have not set major yet</p>
+  <%} else {%>
+    <p><b>Major: </b> <%=user.majorid.majorName%></p>
+  <%}%>
+<!--   <p><b><a href="">View My Course History </a></b></p> -->
   <p>
           <a href="/user/edit/<%= user.id %>" class="btn btn-sm btn-success">Update Your Profile</a>
         </p>
