@@ -41,7 +41,10 @@ COURSE_NUM = 9038
 enrolljson_dir = '/research/EDW_enrollment_2007_2016/preprocess/student_grade_data.json'
 course_dict_dir = '/research/EDW_enrollment_2007_2016/preprocess/edw_enrollment_dict.json'
 ppsk = sys.argv[1]
+<<<<<<< HEAD
 coursesubjectName = sys.argv[2]
+=======
+>>>>>>> b0457d08f09205e91a1cf7d2823e90079f8e131b
 
 enrollment_dict = OrderedDict({}) # ppsk and semester are strings, courses are numbers
 
@@ -113,6 +116,7 @@ def getSemesterSegDataset(max_semester=0, max_course=0):
         x_eval_matrix[0][i] = generateVector(x_eval_list[i], init_course_num)
     eval_input = multiHotRepresentation(x_eval_matrix)
     return eval_input, x_eval_list
+<<<<<<< HEAD
 
 try:
     student_dict = enrollment_dict[ppsk]
@@ -166,6 +170,8 @@ try:
         print (pro[probability])
 except KeyError:
     print ('Sorry, this ppsk does not exist')
+=======
+>>>>>>> b0457d08f09205e91a1cf7d2823e90079f8e131b
 
 
 
