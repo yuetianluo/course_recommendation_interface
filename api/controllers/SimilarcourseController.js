@@ -21,14 +21,11 @@ module.exports = {
      	},	
      search:function(req,res){//
       var results=req.param('data');
-      console.log(results)
-      
-        if(results.length<=1)
+        if(results == 'Sorry, there is not sufficient records about this course, so we can not give you recommendation with strong confidence')
         {
           FlashService.error(req, results)
           return res.badRequest('Sorry, there is not sufficient records about this course, so we can not give you recommendation with strong confidence')        
-        }
-        else{
+        } else{
           idresults=results.slice(0,10);
           cosinesimilar=results.slice(10,20);
           total=[]
